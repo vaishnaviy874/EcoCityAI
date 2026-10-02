@@ -1,0 +1,97 @@
+{
+  "Ghaziabad": {
+    "waste_kg_day": 1420,
+    "recycling_share": 31,
+    "landfilled_share": 49,
+    "organic_share": 52,
+    "plastic_share": 18,
+    "paper_share": 12,
+    "ev_chargers": 46,
+    "solar_mw": 118,
+    "public_transport_index": 68
+  },
+
+  "Delhi": {
+    "waste_kg_day": 11000,
+    "recycling_share": 38,
+    "landfilled_share": 35,
+    "organic_share": 50,
+    "plastic_share": 16,
+    "paper_share": 14,
+    "ev_chargers": 520,
+    "solar_mw": 220,
+    "public_transport_index": 82
+  },
+
+  "Bengaluru": {
+    "waste_kg_day": 5500,
+    "recycling_share": 44,
+    "landfilled_share": 27,
+    "organic_share": 48,
+    "plastic_share": 19,
+    "paper_share": 15,
+    "ev_chargers": 410,
+    "solar_mw": 310,
+    "public_transport_index": 76
+  },
+
+  "Mumbai": {
+    "waste_kg_day": 8500,
+    "recycling_share": 36,
+    "landfilled_share": 41,
+    "organic_share": 51,
+    "plastic_share": 17,
+    "paper_share": 13,
+    "ev_chargers": 350,
+    "solar_mw": 185,
+    "public_transport_index": 88
+  },
+
+  "Pune": {
+    "waste_kg_day": 2100,
+    "recycling_share": 42,
+    "landfilled_share": 30,
+    "organic_share": 49,
+    "plastic_share": 18,
+    "paper_share": 14,
+    "ev_chargers": 165,
+    "solar_mw": 145,
+    "public_transport_index": 73
+  },
+
+  "Hyderabad": {
+    "waste_kg_day": 6500,
+    "recycling_share": 34,
+    "landfilled_share": 44,
+    "organic_share": 50,
+    "plastic_share": 17,
+    "paper_share": 13,
+    "ev_chargers": 210,
+    "solar_mw": 205,
+    "public_transport_index": 71
+  },
+
+  "Chennai": {
+    "waste_kg_day": 5200,
+    "recycling_share": 37,
+    "landfilled_share": 39,
+    "organic_share": 52,
+    "plastic_share": 16,
+    "paper_share": 12,
+    "ev_chargers": 235,
+    "solar_mw": 240,
+    "public_transport_index": 79
+  },
+
+  "Kolkata": {
+    "waste_kg_day": 4800,
+    "recycling_share": 29,
+    "landfilled_share": 51,
+    "organic_share": 53,
+    "plastic_share": 17,
+    "paper_share": 11,
+    "ev_chargers": 125,
+    "solar_mw": 105,
+    "public_transport_index": 81
+  }
+}

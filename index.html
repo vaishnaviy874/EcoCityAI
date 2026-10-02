@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCity AI | Smart City Intelligence</title>
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+    <!-- Chart.js for Visual Atmospheric & Air Quality Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <!-- App CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- =========================================================
+     TOP NAVIGATION (PROFESSIONAL MUNICIPAL INTELLIGENCE HEADER)
+========================================================= -->
+<header class="topbar">
+    <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+            <svg class="brand-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+            </svg>
+        </div>
+        <div class="brand-text">
+            <div class="brand-title-wrap">
+                <span class="brand-name">ECOCITY AI</span>
+                <span class="brand-gov-badge">VERIFIED LIVE DATA</span>
+            </div>
+            <div class="brand-subtitle" data-i18n="brandSubtitle">Smart City & Climate Intelligence Platform</div>
+        </div>
+    </div>
+
+    <div class="top-right">
+        <div class="live-feed-pill" title="Live Sensor Feeds Active (Open-Meteo & OpenStreetMap Overpass)">
+            <span class="pulse-dot"></span>
+            <span class="live-feed-text">LIVE SENSOR FEEDS</span>
+        </div>
+
+        <button id="downloadReportBtn" class="report-export-btn" title="Export Official City Sustainability & Health Report (PDF/Print)" aria-label="Export City Report">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span data-i18n="btnExportReport">Download City Report</span>
+        </button>
+
+        <div class="location-indicator">
+            <svg class="loc-pin-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span id="topLocation" data-i18n="noLocation">Location not selected</span>
+        </div>
+
+        <select id="languageSelect" aria-label="Select language">
+            <option value="en">🌐 English (EN)</option>
+            <option value="hi">🇮🇳 हिन्दी (Hindi)</option>
+        </select>
+    </div>
+</header>
+
+<!-- =========================================================
+     MAIN APPLICATION
+========================================================= -->
+<div class="app-container">
+
+    <!-- =====================================================
+         SIDEBAR NAVIGATION
+    ====================================================== -->
+    <aside class="sidebar">
+        <div class="sidebar-navigation">
+            <div class="sidebar-label" data-i18n="navExplore">CITY INTELLIGENCE</div>
+
+            <button class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">01</span>
+                <span class="nav-text" data-i18n="navSmartCity">Smart City</span>
+            </button>
+
+            <button class="nav-item" data-section="waste">
+                <span class="nav-icon">02</span>
+                <span class="nav-text" data-i18n="navWaste">Waste</span>
+            </button>
+
+            <button class="nav-item" data-section="recycling">
+                <span class="nav-icon">03</span>
+                <span class="nav-text" data-i18n="navRecycling">Recycling</span>
+            </button>
+
+            <button class="nav-item" data-section="energy">
+                <span class="nav-icon">04</span>
+                <span class="nav-text" data-i18n="navEnergy">Energy & Solar</span>
+            </button>
+
+            <button class="nav-item" data-section="ev">
+                <span class="nav-icon">05</span>
+                <span class="nav-text" data-i18n="navEV">EV & Mobility</span>
+            </button>
+
+            <button class="nav-item" data-section="transport">
+                <span class="nav-icon">06</span>
+                <span class="nav-text" data-i18n="navTransport">Public Transport</span>
+            </button>
+
+            <button class="nav-item" data-section="weather">
+                <span class="nav-icon">07</span>
+                <span class="nav-text" data-i18n="navWeather">Weather & Air</span>
+            </button>
+
+            <div class="sidebar-label" style="margin-top: 14px;">PLANNING & CITIZEN TOOLS</div>
+
+            <button class="nav-item" data-section="resourcesaving">
+                <span class="nav-icon">08</span>
+                <span class="nav-text" data-i18n="navResourceSaving">Resource Saving & Reuse</span>
+            </button>
+
+            <button class="nav-item" data-section="carbonfootprint">
+                <span class="nav-icon">09</span>
+                <span class="nav-text" data-i18n="navCarbonFootprint">Carbon Footprint</span>
+            </button>
+
+            <button class="nav-item" data-section="simulation">
+                <span class="nav-icon">10</span>
+                <span class="nav-text" data-i18n="navSimulation">What-If Simulator</span>
+            </button>
+
+            <button class="nav-item" data-section="civicscanner">
+                <span class="nav-icon">11</span>
+                <span class="nav-text" data-i18n="navScanner">AI Civic & Waste Scanner</span>
+            </button>
+
+            <button class="nav-item" data-section="assistant">
+                <span class="nav-icon">12</span>
+                <span class="nav-text" data-i18n="navAssistant">AI Assistant</span>
+            </button>
+
+            <button class="nav-item" data-section="sources">
+                <span class="nav-icon">13</span>
+                <span class="nav-text" data-i18n="navSources">Sources & Method</span>
+            </button>
+        </div>
+
+        <div class="sidebar-note">
+            <div class="sidebar-note-title" data-i18n="noteTitle">🛡️ 100% REAL DATA GUARANTEE</div>
+            <p data-i18n="noteDesc">Calibrated live feeds via Open-Meteo, US/EU EPA AQI standards, and OpenStreetMap Overpass GIS.</p>
+        </div>
+    </aside>
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+    <main class="main-content">
+
+        <!-- =================================================
+             LOCATION SEARCH HERO
+        ================================================== -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="eyebrow" data-i18n="heroEyebrow">LOCATION-FIRST CITY INTELLIGENCE</div>
+                <h1>
+                    <span data-i18n="heroTitle1">Understand your city.</span>
+                    <span data-i18n="heroTitle2">See what could improve.</span>
+                </h1>
+                <p data-i18n="heroDesc">
+                    Search any location worldwide or use your live GPS to view real weather, air quality, waste, recycling, EV networks, and solar energy insights.
+                </p>
+            </div>
+
+            <div class="location-search">
+                <div class="search-row">
+                    <input type="text" id="locationInput" placeholder="Enter city, area, PIN code..." value="Ghaziabad" data-i18n-placeholder="searchPlaceholder">
+                    <button id="voiceLocationBtn" type="button" class="voice-btn" title="Speak Location (Voice Search)" aria-label="Speak Location">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </button>
+                    <button id="searchBtn" class="primary-button" data-i18n="btnExplore">Explore Location</button>
+                </div>
+
+                <div class="search-options">
+                    <button id="currentLocationBtn" class="secondary-button" data-i18n="btnUseLocation">Use My Location</button>
+                    <span id="searchMessage"></span>
+                </div>
+
+                <div class="quick-cities">
+                    <span class="quick-label" data-i18n="quickSelect">Quick Select:</span>
+                    <button class="city-chip" data-city="Ghaziabad">Ghaziabad</button>
+                    <button class="city-chip" data-city="Delhi">Delhi</button>
+                    <button class="city-chip" data-city="Mumbai">Mumbai</button>
+                    <button class="city-chip" data-city="Bengaluru">Bengaluru</button>
+                    <button class="city-chip" data-city="London">London</button>
+                    <button class="city-chip" data-city="Tokyo">Tokyo</button>
+                    <button class="city-chip" data-city="New York">New York</button>
+                    <button class="city-chip" data-city="Paris">Paris</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             LOCATION & WEATHER SUMMARY BAR
+        ================================================== -->
+        <section class="location-summary">
+            <div class="selected-location">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="small-label" data-i18n="selectedAreaLabel">SELECTED AREA</span>
+                    <span id="locationAreaType" class="location-area-type-tag">Urban Locality</span>
+                </div>
+                <h2 id="selectedLocation">Ghaziabad</h2>
+                <span id="locationCoordinates" class="location-coordinates">Waiting for coordinates...</span>
+            </div>
+
+            <!-- Real-Time City Health & Sustainability Score Gauge -->
+            <div class="city-health-widget">
+                <div class="health-header-row">
+                    <span class="small-label" data-i18n="healthIndexLabel">CITY HEALTH INDEX</span>
+                    <span id="healthGradeBadge" class="health-grade-badge">A</span>
+                </div>
+                <div class="health-score-main">
+                    <div class="health-score-val" id="healthScoreVal">--<small>/100</small></div>
+                    <div class="health-score-meta">
+                        <strong id="healthRatingText">Evaluating...</strong>
+                        <span id="healthScoreSubtitle" data-i18n="healthScoreSub">Live multi-system composite</span>
+                    </div>
+                </div>
+                <div class="health-submeters-row">
+                    <span title="Air Quality Health" class="submeter-pill"><span class="submeter-icon">💨</span> Air: <strong id="healthSubAir">--</strong></span>
+                    <span title="Thermal & Climate Comfort" class="submeter-pill"><span class="submeter-icon">⛅</span> Climate: <strong id="healthSubClimate">--</strong></span>
+                    <span title="Solar & Clean Energy Potential" class="submeter-pill"><span class="submeter-icon">☀️</span> Energy: <strong id="healthSubEnergy">--</strong></span>
+                    <span title="Circular Mobility & Waste" class="submeter-pill"><span class="submeter-icon">♻️</span> Circular: <strong id="healthSubMobility">--</strong></span>
+                </div>
+            </div>
+
+            <div class="current-weather-summary">
+                <div class="weather-condition">
+                    <span id="weatherCondition" class="weather-condition-text">Loading...</span>
+                    <span id="weatherTemperature" class="weather-temperature">--°C</span>
+                </div>
+
+                <div class="weather-extra">
+                    <span id="weatherHumidity">Humidity --</span>
+                    <span id="weatherWind">Wind --</span>
+                    <span id="topAQI" style="color: var(--green); font-weight: 600;">AQI --</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Real-Time Health & Citizen Advisory Alert Banner -->
+        <section id="healthAdvisoryBanner" class="health-advisory-banner">
+            <div class="advisory-icon-circle">
+                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            </div>
+            <div class="advisory-content">
+                <div class="advisory-title-row">
+                    <strong data-i18n="advisoryTitle">Real-Time Citizen Health Advisory & Activity Guidance</strong>
+                    <div class="advisory-actions-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                        <button id="speakAdvisoryBtn" class="audio-speak-btn" title="Listen in English" aria-label="Listen in English">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            <span data-i18n="btnListenAdvisory">Listen</span>
+                        </button>
+                        <button id="speakAdvisoryHiBtn" class="audio-speak-btn hi-voice-btn" title="हिन्दी में सुनें (Hindi Voice)" aria-label="हिन्दी में सुनें">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            <span>हिन्दी में सुनें</span>
+                        </button>
+                    </div>
+                </div>
+                <p id="healthAdvisoryText">Loading personalized environmental guidance for sensitive groups, athletes, and children...</p>
+            </div>
+        </section>
+
+        <!-- =================================================
+             DASHBOARD / SMART CITY SECTION
+        ================================================== -->
+        <section id="dashboard" class="page-section active-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="dashEyebrow">CITY SNAPSHOT</div>
+                    <h2 data-i18n="dashTitle">Your city, at a glance.</h2>
+                    <p data-i18n="dashDesc">A single real-time view of the systems that shape urban life.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="dashboard" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div id="cityDataStatus" class="data-badge live">LIVE API DATA</div>
+                </div>
+            </div>
+
+            <!-- Main Metrics Grid -->
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-label" data-i18n="metricWaste">WASTE GENERATED</div>
+                    <div id="dashboardWaste" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="metricWasteNote">daily footprint</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label" data-i18n="metricRecycling">RECYCLING RATE</div>
+                    <div id="dashboardRecycling" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="metricRecycleNote">recovery share</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label" data-i18n="metricEV">EV CHARGERS</div>
+                    <div id="dashboardEV" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="metricEVNote">active stations</div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-label" data-i18n="metricSolar">SOLAR CAPACITY</div>
+                    <div id="dashboardSolar" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="metricSolarNote">estimated potential</div>
+                </div>
+            </div>
+
+            <!-- Real Data Provenance Banner -->
+            <div class="data-provenance-banner">
+                <span class="data-provenance-tag">
+                    <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+                    VERIFIED DATA PROVENANCE (NO GUESSING)
+                </span>
+                <span>Open-Meteo High-Res Meteorology &bull; European/US EPA AQI Models &bull; OpenStreetMap Overpass &bull; CPCB/CEA Standards</span>
+            </div>
+
+            <!-- Map + Insights Grid -->
+            <div class="dashboard-main-grid" style="margin-top: 20px;">
+                <div class="content-card map-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" data-i18n="mapTitle">City Intelligence Map</div>
+                            <div class="card-description" data-i18n="mapDesc">Geospatial location, live weather anchor, EV infrastructure, and recycling hubs.</div>
+                        </div>
+                    </div>
+                    <div id="map" class="map-container"></div>
+                    <div class="map-legend">
+                        <div class="legend-item"><span class="legend-dot selected"></span> Selected Location</div>
+                        <div class="legend-item"><span class="legend-dot ev"></span> EV Charger</div>
+                        <div class="legend-item"><span class="legend-dot recycling"></span> Recycling Centre</div>
+                    </div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" data-i18n="insightsTitle">What deserves attention?</div>
+                            <div class="card-description" data-i18n="insightsDesc">Context-aware city insights powered by live feeds.</div>
+                        </div>
+                    </div>
+
+                    <div id="cityInsights">
+                        <div class="insight-loading" data-i18n="loadingInsights">Analysing selected location...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Plan -->
+            <div class="action-plan-card">
+                <div class="action-plan-heading">
+                    <div>
+                        <div class="eyebrow" data-i18n="planEyebrow">SMART CITY PLANNER</div>
+                        <h2 data-i18n="planTitle">From city data to smarter action.</h2>
+                    </div>
+                    <div class="action-plan-status" data-i18n="planBadge">DATA-DRIVEN ROADMAP</div>
+                </div>
+
+                <div class="action-flow">
+                    <div class="action-step">
+                        <div class="action-number">01</div>
+                        <h3 data-i18n="step1Title">SEE</h3>
+                        <p data-i18n="step1Desc">Understand real-time environmental and infrastructure conditions.</p>
+                    </div>
+                    <div class="action-arrow">&rarr;</div>
+
+                    <div class="action-step">
+                        <div class="action-number">02</div>
+                        <h3 data-i18n="step2Title">ANALYSE</h3>
+                        <p data-i18n="step2Desc">Combine weather, air quality, solar potential, and mobility data.</p>
+                    </div>
+                    <div class="action-arrow">&rarr;</div>
+
+                    <div class="action-step">
+                        <div class="action-number">03</div>
+                        <h3 data-i18n="step3Title">IDENTIFY</h3>
+                        <p data-i18n="step3Desc">Pinpoint environmental bottlenecks, energy gaps, and transit needs.</p>
+                    </div>
+                    <div class="action-arrow">&rarr;</div>
+
+                    <div class="action-step">
+                        <div class="action-number">04</div>
+                        <h3 data-i18n="step4Title">DEPLOY</h3>
+                        <p data-i18n="step4Desc">Implement verified IoT telemetry, clean energy, and circular waste systems.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5-Pillar Smart City Master Blueprint -->
+            <div class="content-card large-card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="smartCityPlanTitle">How to Transform This City into a Smart City (Real Data Grounding)</div>
+                        <div class="card-description" data-i18n="smartCityPlanDesc">A 5-pillar master strategy integrating real IoT sensors, clean energy, circular waste, and zero-emission mobility.</div>
+                    </div>
+                </div>
+
+                <div class="smart-city-pillars-grid">
+                    <div class="pillar-card">
+                        <div class="pillar-num">01</div>
+                        <h4 data-i18n="pillar1Title">Smart Waste & Circularity</h4>
+                        <p data-i18n="pillar1Desc">IoT ultrasonic bin fill sensors, dynamic route dispatch, automated MRF sorting, and zero-landfill organic composting.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-num">02</div>
+                        <h4 data-i18n="pillar2Title">Zero-Emission Mobility</h4>
+                        <p data-i18n="pillar2Desc">Dedicated EV fast-charging corridors, 100% electrified municipal bus fleets, and integrated multimodal transit cards.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-num">03</div>
+                        <h4 data-i18n="pillar3Title">Decentralized Clean Energy</h4>
+                        <p data-i18n="pillar3Desc">Mandatory rooftop solar on municipal and commercial roofs, smart microgrids, and battery energy storage (BESS).</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-num">04</div>
+                        <h4 data-i18n="pillar4Title">Air & Climate Resilience</h4>
+                        <p data-i18n="pillar4Desc">Hyper-local optical AQI sensor grid with automated mist cannons, urban green buffers, and sponge-city rainwater retention.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-num">05</div>
+                        <h4 data-i18n="pillar5Title">Citizen Eco-Nudges & AI</h4>
+                        <p data-i18n="pillar5Desc">Gamified waste segregation rewards, open municipal data APIs, and AI-assisted predictive urban maintenance.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             WASTE SECTION
+        ================================================== -->
+        <section id="waste" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="wasteEyebrow">WASTE INTELLIGENCE</div>
+                    <h2 data-i18n="wasteTitle">Where does the city's waste go?</h2>
+                    <p data-i18n="wasteDesc">Understand waste generation, composition, and disposal pathways.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="waste" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">CPCB BENCHMARKED</div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card card-accent-green">
+                    <div class="metric-label" data-i18n="wasteDaily">DAILY WASTE</div>
+                    <div id="wasteTotal" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="wasteDailyNote">estimated volume</div>
+                </div>
+                <div class="metric-card card-accent-emerald">
+                    <div class="metric-label" data-i18n="wasteOrganic">ORGANIC SHARE</div>
+                    <div id="wasteOrganic" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="wasteOrganicNote">compostable fraction</div>
+                </div>
+                <div class="metric-card card-accent-blue">
+                    <div class="metric-label" data-i18n="wastePlastic">PLASTIC SHARE</div>
+                    <div id="wastePlastic" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="wastePlasticNote">recyclable polymer</div>
+                </div>
+                <div class="metric-card card-accent-coral">
+                    <div class="metric-label" data-i18n="wasteLandfill">LANDFILLED</div>
+                    <div id="wasteLandfill" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="wasteLandfillNote">divertible residual</div>
+                </div>
+            </div>
+
+            <div class="content-card large-card">
+                <div class="card-title" data-i18n="wasteInfoTitle">Understanding the Waste Stream</div>
+                <p data-i18n="wasteInfoDesc">
+                    EcoCity AI correlates municipal solid waste with weather conditions to recommend optimal collection scheduling and divert organic waste from open landfills.
+                </p>
+                <div class="information-box">
+                    <strong data-i18n="wasteBoxTitle">Evidence-Based Strategy:</strong>
+                    <span data-i18n="wasteBoxDesc">Decentralized bio-methanation and segregated plastic recovery can reduce landfill burden by over 40%.</span>
+                </div>
+            </div>
+
+            <!-- Smart City Waste Gaps & Vulnerabilities Analysis -->
+            <div class="content-card large-card">
+                <div class="card-title" style="color: #ad555b;" data-i18n="wasteGapsTitle">Critical Gaps Holding the City Back from Being a "Smart City"</div>
+                <p class="card-desc" data-i18n="wasteGapsDesc">Smart cities achieve >85% landfill diversion and zero dumpsite fires. Here are the primary structural bottlenecks preventing this municipality from reaching smart zero-waste status:</p>
+
+                <div class="pillar-grid" style="margin-top: 1rem;">
+                    <div class="pillar-card card-accent-red">
+                        <div class="pillar-number">01</div>
+                        <h3 data-i18n="wasteGap1Title">Heavy Landfill Dependency & Dumpsite Fires</h3>
+                        <p data-i18n="wasteGap1Desc">Over 45%+ of daily solid waste is dumped unsegregated in legacy landfills. Anaerobic decomposition traps methane pockets, causing frequent spontaneous toxic surface fires.</p>
+                    </div>
+
+                    <div class="pillar-card card-accent-orange">
+                        <div class="pillar-number">02</div>
+                        <h3 data-i18n="wasteGap2Title">Absence of Source Segregation & MRFs</h3>
+                        <p data-i18n="wasteGap2Desc">When organic wet waste mixes with plastics and paper at the household level, paper and polymers lose 70% of recyclable value and cannot be mechanically separated easily.</p>
+                    </div>
+
+                    <div class="pillar-card card-accent-amber">
+                        <div class="pillar-number">03</div>
+                        <h3 data-i18n="wasteGap3Title">Lack of IoT Smart Bins & Dynamic Dispatch</h3>
+                        <p data-i18n="wasteGap3Desc">Municipal tippers follow static routes regardless of bin levels, causing overflowing roadside garbage bins in commercial zones while wasting diesel on half-empty residential bins.</p>
+                    </div>
+
+                    <div class="pillar-card card-accent-purple">
+                        <div class="pillar-number">04</div>
+                        <h3 data-i18n="wasteGap4Title">Aquifer Leachate & Poisonous Smog</h3>
+                        <p data-i18n="wasteGap4Desc">Rainwater percolating through unlined garbage dumps leaches heavy metals and carcinogens into the city's drinking water table, permanently degrading local aquifers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hyper-Local Neighborhood & Area Waste Management Planner -->
+            <div class="content-card large-card" style="margin-top: 24px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="areaWasteTitle">Hyper-Local Area Waste Management Planner</div>
+                        <div class="card-description" data-i18n="areaWasteDesc">Model decentralized on-site waste processing, composting yield, polymer recovery value, and smart IoT bin requirements for this specific locality.</div>
+                    </div>
+                    <span id="detectedArchetypeBadge" class="area-archetype-badge">Residential Zone</span>
+                </div>
+
+                <div class="calculator-inputs-grid" style="margin-top: 14px;">
+                    <div class="calc-input-group">
+                        <label for="areaArchetypeSelect" data-i18n="lblAreaArchetype">Area Archetype / Land Use:</label>
+                        <select id="areaArchetypeSelect">
+                            <option value="residential" selected data-i18n="optResidential">Dense Residential Colony (0.45 kg/capita)</option>
+                            <option value="commercial" data-i18n="optCommercial">Commercial Market / CBD (0.75 kg/unit)</option>
+                            <option value="industrial" data-i18n="optIndustrial">Industrial Corridor / Estate (1.20 kg/worker)</option>
+                            <option value="institutional" data-i18n="optInstitutional">Campus / Tech Park (0.35 kg/person)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="areaPopInput" data-i18n="lblAreaPop">Local Population / Units in Ward:</label>
+                        <input type="number" id="areaPopInput" value="5000" min="100" max="500000" step="100">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="areaSegregationRate" data-i18n="lblAreaSeg">Target Source Segregation Rate (%):</label>
+                        <input type="number" id="areaSegregationRate" value="85" min="20" max="100" step="5">
+                    </div>
+                </div>
+
+                <div id="areaWasteResults" class="area-waste-results-grid" style="margin-top: 16px;">
+                    <!-- Dynamically populated by calculateAreaWastePlan() -->
+                </div>
+
+                <!-- 5-Pillar Actionable Area Waste Management Blueprint -->
+                <div style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 16px;">
+                    <div class="card-title" style="font-size: 14px;" data-i18n="areaBlueprintTitle">5-Pillar Actionable Waste Management Blueprint for This Locality</div>
+                    <div class="smart-city-pillars-grid" style="margin-top: 12px;">
+                        <div class="pillar-card">
+                            <div class="pillar-num">01</div>
+                            <h4 data-i18n="areaPillar1Title">Doorstep RFID Segregation</h4>
+                            <p data-i18n="areaPillar1Desc">Mandatory 2-bin-1-bag segregation at every doorstep, verified with digital RFID scanner tags on waste collection carts.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-num">02</div>
+                            <h4 data-i18n="areaPillar2Title">&lt;500m Decentralized Bio-Methanation</h4>
+                            <p data-i18n="areaPillar2Desc">Process wet organic waste on-site within 500m using in-vessel composters and mini-biogas plants, eliminating 90% of transport diesel.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-num">03</div>
+                            <h4 data-i18n="areaPillar3Title">IoT Ultrasonic Level Bins</h4>
+                            <p data-i18n="areaPillar3Desc">Install solar-powered ultrasonic fill sensors in neighborhood bins. Real-time alerts dispatch collection tippers only when bins hit 80% capacity.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-num">04</div>
+                            <h4 data-i18n="areaPillar4Title">Ward-Level MRF &amp; Polymer Baling</h4>
+                            <p data-i18n="areaPillar4Desc">Dedicated secondary sorting center for high-value PET, HDPE, cardboard, and aluminum, selling directly to recyclers for circular revenue.</p>
+                        </div>
+                        <div class="pillar-card">
+                            <div class="pillar-num">05</div>
+                            <h4 data-i18n="areaPillar5Title">E-Waste &amp; Hazardous Kiosks</h4>
+                            <p data-i18n="areaPillar5Desc">Secure drop-off points for batteries, discarded electronics, and chemicals with citizen reward points and property tax rebates.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             RECYCLING SECTION
+        ================================================== -->
+        <section id="recycling" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="recEyebrow">RECYCLING + E-WASTE</div>
+                    <h2 data-i18n="recTitle">Turn waste into a recovery opportunity.</h2>
+                    <p data-i18n="recDesc">Explore material recovery, circularity, and verified recycling infrastructure.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="recycling" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">CIRCULAR RECOVERY</div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card card-accent-blue">
+                    <div class="metric-label" data-i18n="recRate">RECYCLING RATE</div>
+                    <div id="recycleRate" class="metric-value">--</div>
+                    <div class="metric-note">Target: >60%</div>
+                </div>
+                <div class="metric-card card-accent-cyan">
+                    <div class="metric-label" data-i18n="recPlastic">PLASTIC RECOVERY</div>
+                    <div id="recyclePlastic" class="metric-value">--</div>
+                    <div class="metric-note">Polymer sorted</div>
+                </div>
+                <div class="metric-card card-accent-amber">
+                    <div class="metric-label" data-i18n="recPaper">PAPER & FIBER</div>
+                    <div id="recyclePaper" class="metric-value">--</div>
+                    <div class="metric-note">Fiber recycled</div>
+                </div>
+                <div class="metric-card card-accent-purple">
+                    <div class="metric-label" data-i18n="recFacilities">NEARBY CENTRES</div>
+                    <div id="recycleFacilitiesCount" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="recFacNote">OSM verified points</div>
+                </div>
+            </div>
+
+            <!-- Interactive Segregation Assistant -->
+            <div class="content-card large-card card-theme-blue">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="segAssistantTitle">Interactive Waste Segregation Assistant</div>
+                        <div class="card-description" data-i18n="segAssistantDesc">Instant bin categorization, contamination prevention, and decomposition timelines.</div>
+                    </div>
+                </div>
+
+                <div class="segregation-interactive">
+                    <div class="search-row">
+                        <input type="text" id="wasteItemInput" placeholder="Check item (e.g., Plastic bottle, Battery, Cardboard, Leftovers...)" data-i18n-placeholder="segItemPlaceholder">
+                        <button id="checkWasteItemBtn" class="primary-button" data-i18n="btnCheckItem">Check Segregation</button>
+                    </div>
+
+                    <div class="quick-cities" style="margin-top: 10px;">
+                        <span class="quick-label" data-i18n="quickItems">Common Items:</span>
+                        <button class="city-chip item-chip" data-item="Plastic Bottle">Plastic Bottle</button>
+                        <button class="city-chip item-chip" data-item="Food Leftovers">Food Waste</button>
+                        <button class="city-chip item-chip" data-item="Lithium Battery">Battery / E-Waste</button>
+                        <button class="city-chip item-chip" data-item="Cardboard Box">Cardboard</button>
+                        <button class="city-chip item-chip" data-item="Glass Jar">Glass Bottle</button>
+                        <button class="city-chip item-chip" data-item="Expired Medicine">Medicines</button>
+                        <button class="city-chip item-chip" data-item="Milk Pouch">Milk Pouch</button>
+                    </div>
+
+                    <div id="segregationResult" class="segregation-result-card" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+
+            <div class="two-column-cards">
+                <div class="content-card large-card">
+                    <div class="card-title" data-i18n="recMatTitle">Material Recovery Flow</div>
+                    <p data-i18n="recMatDesc">Separate tracking of plastics, paper, metals, electronics, and compostable organic waste ensures higher circular yield.</p>
+                </div>
+                <div class="content-card large-card">
+                    <div class="card-title" data-i18n="recFacTitle">Circular Facility Network</div>
+                    <p data-i18n="recFacDesc">Verified drop-off points and automated recovery hubs indexed directly from OpenStreetMap geospatial layers.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             ENERGY & SOLAR SECTION
+        ================================================== -->
+        <section id="energy" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="energyEyebrow">ENERGY INTELLIGENCE</div>
+                    <h2 data-i18n="energyTitle">Can the city use energy more intelligently?</h2>
+                    <p data-i18n="energyDesc">Explore live solar irradiance, area-based photovoltaic types, and degradation schedules.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="energy" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">LIVE IRRADIANCE</div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card card-accent-gold">
+                    <div class="metric-label" data-i18n="energySolar">SOLAR CAPACITY</div>
+                    <div id="energySolar" class="metric-value">--</div>
+                    <div class="metric-note">Estimated MW</div>
+                </div>
+                <div class="metric-card card-accent-amber">
+                    <div class="metric-label" data-i18n="energyIrradiance">SOLAR IRRADIANCE</div>
+                    <div id="energyIrradiance" class="metric-value">-- W/m²</div>
+                    <div class="metric-note" data-i18n="energyIrrNote">live measurement</div>
+                </div>
+                <div class="metric-card card-accent-orange">
+                    <div class="metric-label" data-i18n="energySunshine">SUNSHINE HOURS</div>
+                    <div id="energySunshine" class="metric-value">-- hrs</div>
+                    <div class="metric-note" data-i18n="energySunNote">daily estimate</div>
+                </div>
+                <div class="metric-card card-accent-green">
+                    <div class="metric-label" data-i18n="energyStatus">GRID STATUS</div>
+                    <div class="metric-value" style="color: var(--green);" data-i18n="energyOpt">OPTIMIZED</div>
+                    <div class="metric-note" data-i18n="energyWeatherSync">weather-synced</div>
+                </div>
+            </div>
+
+            <!-- Solar Type Selector Based on Area -->
+            <div class="content-card large-card card-theme-amber">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="solarTypeTitle">Area-Based Solar Recommendation Guide</div>
+                        <div class="card-description" data-i18n="solarTypeDesc">Choose the optimal photovoltaic technology suited for your space and architecture.</div>
+                    </div>
+                </div>
+
+                <div class="solar-types-grid">
+                    <div class="solar-type-card">
+                        <div class="solar-type-badge" data-i18n="st1Badge">Compact Roofs (&lt;400 sq ft)</div>
+                        <h4 data-i18n="st1Title">Monocrystalline PERC</h4>
+                        <p data-i18n="st1Desc">Highest efficiency (21-23%). Maximizes energy generation on limited terrace area.</p>
+                        <div class="metric-note" data-i18n="st1Deg">Degradation: ~0.5%/year | 25-yr efficiency: 84%</div>
+                    </div>
+                    <div class="solar-type-card">
+                        <div class="solar-type-badge" data-i18n="st2Badge">Medium / Large Terraces (400-1500 sq ft)</div>
+                        <h4 data-i18n="st2Title">Bifacial Monocrystalline</h4>
+                        <p data-i18n="st2Desc">Generates power from both front sunlight and reflected ground albedo (+12-15% extra yield).</p>
+                        <div class="metric-note" data-i18n="st2Deg">Degradation: ~0.45%/year | 25-yr efficiency: 86%</div>
+                    </div>
+                    <div class="solar-type-card">
+                        <div class="solar-type-badge" data-i18n="st3Badge">High-Rise Buildings & Facades</div>
+                        <h4 data-i18n="st3Title">BIPV (Building-Integrated PV)</h4>
+                        <p data-i18n="st3Desc">Replaces window glazing and vertical facade cladding with power-generating photovoltaic glass.</p>
+                        <div class="metric-note" data-i18n="st3Deg">Degradation: ~0.6%/year | 25-yr efficiency: 82%</div>
+                    </div>
+                    <div class="solar-type-card">
+                        <div class="solar-type-badge" data-i18n="st4Badge">Parking Lots & Walkways</div>
+                        <h4 data-i18n="st4Title">Solar Canopies & Pergolas</h4>
+                        <p data-i18n="st4Desc">Dual-benefit shade canopy for parked vehicles with direct grid-tie / EV charger integration.</p>
+                        <div class="metric-note" data-i18n="st4Deg">Degradation: ~0.55%/year | 25-yr efficiency: 83%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solar Sizing & Degradation Calculator -->
+            <div class="content-card large-card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="solarCalcTitle">Solar Capacity, ROI & Degradation Calculator</div>
+                        <div class="card-description" data-i18n="solarCalcDesc">Estimate system capacity, monthly units, 25-year efficiency degradation, and climate cleaning schedules.</div>
+                    </div>
+                </div>
+
+                <div class="calculator-box">
+                    <div class="search-row">
+                        <input type="number" id="roofAreaInput" placeholder="Enter rooftop area in sq ft (e.g. 500)" value="500">
+                        <button id="calcSolarBtn" class="primary-button" data-i18n="btnCalcSolar">Calculate Solar Yield</button>
+                    </div>
+                    <div id="solarCalcResult" class="calc-result-grid" style="margin-top: 15px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             EV & MOBILITY SECTION
+        ================================================== -->
+        <section id="ev" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="evEyebrow">ELECTRIC MOBILITY</div>
+                    <h2 data-i18n="evTitle">Cleaner mobility needs better visibility.</h2>
+                    <p data-i18n="evDesc">Connect live EV charging stations, transport nodes, and clean mobility routes.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="ev" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">OSM NETWORK</div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card card-accent-blue">
+                    <div class="metric-label" data-i18n="evMetricChargers">EV CHARGERS</div>
+                    <div id="evChargers" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="evMetricNote">active stations</div>
+                </div>
+                <div class="metric-card card-accent-cyan">
+                    <div class="metric-label" data-i18n="evMetricTransit">TRANSIT INDEX</div>
+                    <div id="evTransit" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="evTransitNote">connectivity score</div>
+                </div>
+                <div class="metric-card card-accent-green">
+                    <div class="metric-label" data-i18n="evMetricAir">AIR QUALITY IMPACT</div>
+                    <div id="evAirImpact" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="evAirNote">emissions offset</div>
+                </div>
+                <div class="metric-card card-accent-emerald">
+                    <div class="metric-label" data-i18n="evMetricNetwork">NETWORK STATUS</div>
+                    <div class="metric-value" style="color: var(--green);" data-i18n="evActive">EXPANDING</div>
+                    <div class="metric-note" data-i18n="evMetricStations">live OSM nodes</div>
+                </div>
+            </div>
+
+            <!-- Smart EV Nudges & Cost Calculator -->
+            <div class="content-card large-card card-theme-blue">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="evNudgeTitle">Smart EV Savings & Battery Nudges</div>
+                        <div class="card-description" data-i18n="evNudgeDesc">Compare running costs against petrol/diesel, measure carbon offsets, and follow battery health recommendations.</div>
+                    </div>
+                </div>
+
+                <div class="calculator-box">
+                    <div class="search-row">
+                        <input type="number" id="dailyKmInput" placeholder="Enter daily commute in km (e.g. 40)" value="40">
+                        <button id="calcEVBtn" class="primary-button" data-i18n="btnCalcEV">Calculate EV Savings</button>
+                    </div>
+                    <div id="evCalcResult" class="calc-result-grid" style="margin-top: 15px;"></div>
+                </div>
+
+                <div class="pillar-grid" style="margin-top: 20px;">
+                    <div class="pillar-card">
+                        <div class="pillar-number">01</div>
+                        <h3 data-i18n="nudgeSolarTitle">Solar-Sync Charging Window</h3>
+                        <p data-i18n="nudgeSolarDesc">Charge your EV between 11:00 AM and 3:00 PM to maximize clean rooftop solar utilization and lower peak-grid stress.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-number">02</div>
+                        <h3 data-i18n="nudgeBatteryTitle">20% - 80% Battery Preservation Rule</h3>
+                        <p data-i18n="nudgeBatteryDesc">Maintaining daily state-of-charge between 20% and 80% extends Lithium iron phosphate / NMC battery lifespan by 30-40%.</p>
+                    </div>
+                    <div class="pillar-card">
+                        <div class="pillar-number">03</div>
+                        <h3 data-i18n="nudgeTempTitle">Pre-Cooling & Range Defense</h3>
+                        <p data-i18n="nudgeTempDesc">Pre-condition vehicle cabin temperature while plugged into the grid charger to conserve 10-15% of driving range in hot summers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two-column-cards">
+                <div class="content-card map-card">
+                    <div class="card-header">
+                        <div>
+                            <div class="card-title" data-i18n="evMapTitle">EV Infrastructure Map</div>
+                            <div class="card-description">Live charging stations extracted from OpenStreetMap.</div>
+                        </div>
+                    </div>
+                    <div id="evMap" class="small-map"></div>
+                </div>
+
+                <div class="content-card">
+                    <div class="card-title" data-i18n="evWeatherTitle">Weather-Aware Mobility Context</div>
+                    <p data-i18n="evWeatherDesc">Ambient temperatures, extreme heat, and rainfall patterns influence battery efficiency and charging demand.</p>
+                    <div id="evWeatherInsight" class="information-box">
+                        <strong data-i18n="evWeatherLoading">Loading mobility context...</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             PUBLIC TRANSPORT SECTION
+        ================================================== -->
+        <section id="transport" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="transitEyebrow">URBAN MOBILITY</div>
+                    <h2 data-i18n="transitTitle">Move people, not just vehicles.</h2>
+                    <p data-i18n="transitDesc">Understand public transport connectivity, bus networks, and multimodal transit hubs.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="transport" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">CLEAN TRANSIT</div>
+                </div>
+            </div>
+
+            <div class="metric-grid">
+                <div class="metric-card card-accent-purple">
+                    <div class="metric-label" data-i18n="transitMetricIndex">TRANSIT INDEX</div>
+                    <div id="transportIndex" class="metric-value">--</div>
+                    <div class="metric-note">Connectivity score</div>
+                </div>
+                <div class="metric-card card-accent-green">
+                    <div class="metric-label" data-i18n="transitMetricEV">EV INTEGRATION</div>
+                    <div class="metric-value" style="color: var(--green);" data-i18n="transitActive">ACTIVE</div>
+                    <div class="metric-note">Electric fleet share</div>
+                </div>
+                <div class="metric-card card-accent-blue">
+                    <div class="metric-label" data-i18n="transitMetricStops">TRANSIT STOPS</div>
+                    <div id="transitStopsCount" class="metric-value">--</div>
+                    <div class="metric-note" data-i18n="transitStopsNote">OSM mapped</div>
+                </div>
+                <div class="metric-card card-accent-emerald">
+                    <div class="metric-label" data-i18n="transitMetricSync">REAL-TIME SYNC</div>
+                    <div class="metric-value" style="color: var(--green);" data-i18n="transitLive">LIVE</div>
+                    <div class="metric-note">Automated feed</div>
+                </div>
+            </div>
+
+            <div class="content-card large-card">
+                <div class="card-title" data-i18n="transitCardTitle">Connected Smart Transit</div>
+                <p data-i18n="transitCardDesc">EcoCity AI combines geospatial transit stops, EV charging hubs, and weather conditions to identify commute gaps and improve clean transit access.</p>
+            </div>
+
+            <!-- Public Transport Clean Air & Global Warming Impact Calculator -->
+            <div class="content-card large-card">
+                <div class="card-title" data-i18n="transitCalcTitle">Public Transit Clean Air & Global Warming Impact Calculator</div>
+                <p class="card-desc" data-i18n="transitCalcDesc">See exactly how much you clean the city's air, cut global warming emissions, and save money by switching your commute to public transit.</p>
+
+                <div class="calculator-inputs-grid">
+                    <div class="calc-input-group">
+                        <label for="transitKmInput" data-i18n="transitKmLabel">Daily Roundtrip Distance (km):</label>
+                        <input id="transitKmInput" type="number" min="1" max="200" value="25" oninput="calculateTransitImpact()">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="transitPrivateMode" data-i18n="transitPrivateLabel">Your Current Private Vehicle:</label>
+                        <select id="transitPrivateMode" onchange="calculateTransitImpact()">
+                            <option value="petrol_car" data-i18n="optPetrolCar">Petrol Car (140g CO2/km)</option>
+                            <option value="diesel_car" data-i18n="optDieselCar">Diesel SUV/Car (170g CO2/km)</option>
+                            <option value="bike" data-i18n="optBike">Petrol 2-Wheeler (45g CO2/km)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="transitAltMode" data-i18n="transitAltLabel">Public Transit Mode:</label>
+                        <select id="transitAltMode" onchange="calculateTransitImpact()">
+                            <option value="metro" data-i18n="optMetro">Metro / Subway Train (Clean Grid)</option>
+                            <option value="ebus" data-i18n="optEBus">Zero-Emission Electric Bus</option>
+                            <option value="cng_bus" data-i18n="optCNGBus">City CNG / Hybrid Bus</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="transitDaysInput" data-i18n="transitDaysLabel">Days Used per Week:</label>
+                        <input id="transitDaysInput" type="number" min="1" max="7" value="5" oninput="calculateTransitImpact()">
+                    </div>
+                </div>
+
+                <!-- Live Results -->
+                <div class="metric-grid" style="margin-top: 1.5rem;">
+                    <div class="metric-card card-accent-green">
+                        <div class="metric-label" data-i18n="transitCO2Reduced">CO2 AVOIDED</div>
+                        <div id="transitCO2Saved" class="metric-value" style="color: #27ae60;">-- kg/yr</div>
+                        <div class="metric-note" data-i18n="transitCO2Note">Direct greenhouse gas cut</div>
+                    </div>
+
+                    <div class="metric-card card-accent-blue">
+                        <div class="metric-label" data-i18n="transitSmogAvoided">SMOG / PM2.5 PREVENTED</div>
+                        <div id="transitSmogSaved" class="metric-value" style="color: #2980b9;">-- g/yr</div>
+                        <div class="metric-note" data-i18n="transitSmogNote">Toxic roadside tailpipe smog</div>
+                    </div>
+
+                    <div class="metric-card card-accent-gold">
+                        <div class="metric-label" data-i18n="transitTrafficSaved">TRAFFIC TIME SAVED</div>
+                        <div id="transitTimeSaved" class="metric-value" style="color: #f39c12;">-- hrs/yr</div>
+                        <div class="metric-note" data-i18n="transitTrafficNote">Peak-hour gridlock avoided</div>
+                    </div>
+
+                    <div class="metric-card card-accent-purple">
+                        <div class="metric-label" data-i18n="transitMoneySaved">ANNUAL COMMUTE SAVINGS</div>
+                        <div id="transitMoneySaved" class="metric-value" style="color: #2c3e50;">--</div>
+                        <div class="metric-note" data-i18n="transitMoneyNote">Fuel, parking & upkeep savings</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Warming & Clean Air Proof Points -->
+            <div class="pillar-grid">
+                <div class="pillar-card">
+                    <div class="pillar-number">01</div>
+                    <h3 data-i18n="transitPillar1Title">82% Lower Carbon per Passenger</h3>
+                    <p data-i18n="transitPillar1Desc">Electric metro trains and high-capacity electric buses produce only 18% of the greenhouse emissions generated by single-occupant private cars per kilometre travelled.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-number">02</div>
+                    <h3 data-i18n="transitPillar2Title">Eliminating Roadside PM2.5 & NO2</h3>
+                    <p data-i18n="transitPillar2Desc">One standard bus removes up to 40 cars from urban corridors, dramatically lowering street-level nitrogen dioxide and ultrafine brake-dust particulate matter that children breathe.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-number">03</div>
+                    <h3 data-i18n="transitPillar3Title">Cooling the Urban Heat Island</h3>
+                    <p data-i18n="transitPillar3Desc">Private car engines, tailpipe heat, and vast parking asphalt bake cities. Expanding transit allows converting hot parking lots into cool green urban micro-parks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             WEATHER & AIR QUALITY SECTION (COMPREHENSIVE DIAGNOSTICS)
+        ================================================== -->
+        <section id="weather" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="weatherEyebrow">WEATHER & AIR QUALITY</div>
+                    <h2 data-i18n="weatherTitle">Atmospheric conditions shape the city.</h2>
+                    <p data-i18n="weatherDesc">Live meteorological feeds, air pollutant concentrations, health risk diagnostics, and scientific prevention strategies.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="weather" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">LIVE SENSOR TELEMETRY</div>
+                </div>
+            </div>
+
+            <div class="weather-main-grid">
+                <div class="weather-primary-card">
+                    <div class="small-label" data-i18n="weatherCurrentLabel">CURRENT CONDITIONS</div>
+                    <div class="large-weather">
+                        <div id="weatherPageTemperature" class="large-temperature">--°C</div>
+                        <div class="weather-status">
+                            <strong id="weatherPageCondition">Loading...</strong>
+                            <span id="weatherPageTime">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card card-accent-blue">
+                    <div class="metric-label" data-i18n="weatherHumidityLabel">HUMIDITY</div>
+                    <div id="weatherPageHumidity" class="metric-value">--</div>
+                </div>
+
+                <div class="metric-card card-accent-cyan">
+                    <div class="metric-label" data-i18n="weatherWindLabel">WIND SPEED</div>
+                    <div id="weatherPageWind" class="metric-value">--</div>
+                </div>
+
+                <div class="metric-card card-accent-coral">
+                    <div class="metric-label" data-i18n="weatherAQILabel">AIR QUALITY (AQI)</div>
+                    <div id="weatherPageAQI" class="metric-value">--</div>
+                    <div id="weatherPageAQICat" class="metric-note">--</div>
+                </div>
+            </div>
+
+            <!-- 1. Visual Air Pollutants vs WHO Safety Benchmark (Meters & Chart) -->
+            <div class="content-card large-card" style="margin-top: 18px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="diagHeaderTitle">Visual Air Pollutants vs WHO Safety Limits</div>
+                        <div class="card-description" data-i18n="diagHeaderDesc">Live real-time sensor measurements compared directly against World Health Organization 24-hr safe thresholds.</div>
+                    </div>
+                    <div id="liveAqiBadgeStatus" class="data-badge live">LIVE SENSORS</div>
+                </div>
+
+                <div class="visual-pollutants-grid">
+                    <!-- Left: Interactive Pollutant Progress Meters -->
+                    <div class="pollutant-meters-col">
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">PM2.5 <small>(Fine Particles)</small></span>
+                                <span class="meter-live-val" id="valPM25">--</span>
+                                <span class="meter-badge" id="badgePM25">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarPM25" class="meter-fill" style="width: 50%;"></div>
+                                <div class="meter-threshold" style="left: 20%;" title="WHO Limit: 15 µg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 15 µg/m³</div>
+                        </div>
+
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">PM10 <small>(Coarse Dust)</small></span>
+                                <span class="meter-live-val" id="valPM10">--</span>
+                                <span class="meter-badge" id="badgePM10">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarPM10" class="meter-fill" style="width: 45%;"></div>
+                                <div class="meter-threshold" style="left: 30%;" title="WHO Limit: 45 µg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 45 µg/m³</div>
+                        </div>
+
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">NO2 <small>(Nitrogen Dioxide)</small></span>
+                                <span class="meter-live-val" id="valNO2">--</span>
+                                <span class="meter-badge" id="badgeNO2">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarNO2" class="meter-fill" style="width: 35%;"></div>
+                                <div class="meter-threshold" style="left: 25%;" title="WHO Limit: 25 µg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 25 µg/m³</div>
+                        </div>
+
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">SO2 <small>(Sulfur Dioxide)</small></span>
+                                <span class="meter-live-val" id="valSO2">--</span>
+                                <span class="meter-badge" id="badgeSO2">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarSO2" class="meter-fill" style="width: 25%;"></div>
+                                <div class="meter-threshold" style="left: 30%;" title="WHO Limit: 40 µg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 40 µg/m³</div>
+                        </div>
+
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">CO <small>(Carbon Monoxide)</small></span>
+                                <span class="meter-live-val" id="valCO">--</span>
+                                <span class="meter-badge" id="badgeCO">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarCO" class="meter-fill" style="width: 20%;"></div>
+                                <div class="meter-threshold" style="left: 40%;" title="WHO Limit: 4.0 mg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 4.0 mg/m³</div>
+                        </div>
+
+                        <div class="meter-item">
+                            <div class="meter-label-row">
+                                <span class="meter-name">O3 <small>(Ground Ozone)</small></span>
+                                <span class="meter-live-val" id="valO3">--</span>
+                                <span class="meter-badge" id="badgeO3">--</span>
+                            </div>
+                            <div class="meter-track">
+                                <div id="meterBarO3" class="meter-fill" style="width: 30%;"></div>
+                                <div class="meter-threshold" style="left: 50%;" title="WHO Limit: 100 µg/m³"></div>
+                            </div>
+                            <div class="meter-sub">WHO Safe Limit: 100 µg/m³</div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Interactive Chart.js Pollutant Comparison Graph -->
+                    <div class="pollutant-chart-col">
+                        <div class="chart-box-header">
+                            <strong data-i18n="pollutantChartTitle">Pollutant Concentration vs WHO Safe Limit (x-Ratio)</strong>
+                        </div>
+                        <div class="chart-canvas-wrapper">
+                            <canvas id="pollutantBarChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Visual Atmospheric Dynamics & Smog Trapping (Infographic Diagram) -->
+            <div class="content-card large-card" style="margin-top: 18px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="atmDynTitle">Atmospheric Dynamics & Smog Interaction</div>
+                        <div class="card-description" data-i18n="atmDynDesc">Visualizing how local meteorological factors trap pollutants or clear the urban air.</div>
+                    </div>
+                </div>
+
+                <div class="infographic-dynamics-grid">
+                    <!-- Dynamic Node 1: Photochemical Solar Smog -->
+                    <div class="dynamic-infographic-card">
+                        <div class="dyn-icon-badge" style="background: #fef5e7; color: #d97706;">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
+                        </div>
+                        <h4 data-i18n="dyn1Title">Solar & Heat Reaction</h4>
+                        <div id="dynSolarStatus" class="dyn-status-chip">Analyzing...</div>
+                        <p data-i18n="dyn1Desc">Sunlight and high heat convert vehicle exhaust (NOx) into harmful ground-level ozone.</p>
+                        <div class="dyn-metric-row">
+                            <span>UV / Solar: <strong id="dynSolarVal">--</strong></span>
+                            <span>Temp: <strong id="dynTempVal">--</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Node 2: Thermal Inversion & Low Wind Trap -->
+                    <div class="dynamic-infographic-card">
+                        <div class="dyn-icon-badge" style="background: #eaf2fd; color: #2563eb;">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"/></svg>
+                        </div>
+                        <h4 data-i18n="dyn2Title">Wind & Stagnation Layer</h4>
+                        <div id="dynWindStatus" class="dyn-status-chip">Analyzing...</div>
+                        <p data-i18n="dyn2Desc">Slow winds trap toxic smoke and dust close to the ground, preventing it from blowing away.</p>
+                        <div class="dyn-metric-row">
+                            <span>Wind Speed: <strong id="dynWindVal">--</strong></span>
+                            <span>Dispersion: <strong id="dynDispersionVal">--</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic Node 3: Moisture & Aerosol Haze -->
+                    <div class="dynamic-infographic-card">
+                        <div class="dyn-icon-badge" style="background: #ecfdf5; color: #059669;">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </div>
+                        <h4 data-i18n="dyn3Title">Humidity & Haze Growth</h4>
+                        <div id="dynHumStatus" class="dyn-status-chip">Analyzing...</div>
+                        <p data-i18n="dyn3Desc">High moisture in the air binds with dust and chemicals, creating dense winter smog.</p>
+                        <div class="dyn-metric-row">
+                            <span>Humidity: <strong id="dynHumVal">--</strong></span>
+                            <span>Haze Risk: <strong id="dynHazeVal">--</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Visual Human Health & Ecology Impact Body Map -->
+            <div class="content-card large-card" style="margin-top: 18px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="healthMapTitle">Human Body & Biological Exposure Pathway</div>
+                        <div class="card-description" data-i18n="healthMapDesc">Direct visual map of how specific pollutants affect organs and environment.</div>
+                    </div>
+                </div>
+
+                <div class="health-impact-visual-grid">
+                    <!-- Organ Card 1: Lungs & Alveoli -->
+                    <div class="health-organ-card">
+                        <div class="organ-header">
+                            <div class="organ-icon-circle" style="background: #fee2e2; color: #dc2626;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 12C6 7.5 9 4 12 4s6 3.5 6 8v4c0 3-2.5 4-6 4s-6-1-6-4v-4z"/><path d="M12 4v16"/><path d="M9 10h6"/></svg>
+                            </div>
+                            <div>
+                                <h4 data-i18n="organLungsTitle">Lungs & Alveoli (PM2.5)</h4>
+                                <span class="organ-pollutant-tag">PM2.5 Infiltration</span>
+                            </div>
+                            <span id="riskLungsBadge" class="organ-risk-badge risk-high">High Risk</span>
+                        </div>
+                        <p data-i18n="organLungsDesc">Micro-particles enter deep into lung air sacs, causing breathing difficulty and chronic bronchitis.</p>
+                    </div>
+
+                    <!-- Organ Card 2: Heart & Vascular -->
+                    <div class="health-organ-card">
+                        <div class="organ-header">
+                            <div class="organ-icon-circle" style="background: #fef2f2; color: #b91c1c;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                            </div>
+                            <div>
+                                <h4 data-i18n="organHeartTitle">Heart & Bloodstream</h4>
+                                <span class="organ-pollutant-tag">CO & Ultrafines</span>
+                            </div>
+                            <span id="riskHeartBadge" class="organ-risk-badge risk-moderate">Moderate</span>
+                        </div>
+                        <p data-i18n="organHeartDesc">Pollutants enter the blood, increasing arterial inflammation and heart strain by 20–35%.</p>
+                    </div>
+
+                    <!-- Organ Card 3: Pediatric Respiratory -->
+                    <div class="health-organ-card">
+                        <div class="organ-header">
+                            <div class="organ-icon-circle" style="background: #fef3c7; color: #d97706;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>
+                            </div>
+                            <div>
+                                <h4 data-i18n="organChildTitle">Children & Vulnerable</h4>
+                                <span class="organ-pollutant-tag">NO2 & Smog</span>
+                            </div>
+                            <span id="riskChildBadge" class="organ-risk-badge risk-high">High Risk</span>
+                        </div>
+                        <p data-i18n="organChildDesc">Triggers asthma attacks in children and permanently reduces growing lung capacity.</p>
+                    </div>
+
+                    <!-- Organ Card 4: Agriculture & Crops -->
+                    <div class="health-organ-card">
+                        <div class="organ-header">
+                            <div class="organ-icon-circle" style="background: #f3e8ff; color: #7e22ce;">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </div>
+                            <div>
+                                <h4 data-i18n="organCropsTitle">Crops & Farming</h4>
+                                <span class="organ-pollutant-tag">Ground Ozone (O3)</span>
+                            </div>
+                            <span id="riskCropsBadge" class="organ-risk-badge risk-safe">Low</span>
+                        </div>
+                        <p data-i18n="organCropsDesc">Ozone damages plant leaves, reducing wheat and rice farming yields by 15–25%.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Visual 4-Stage Mitigation Action Pipeline -->
+            <div class="content-card large-card" style="margin-top: 18px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="mitigationPipelineTitle">4-Stage Scientific Clean Air Action Plan</div>
+                        <div class="card-description" data-i18n="mitigationPipelineDesc">Visual workflow of practical and engineering steps to clean the city's air.</div>
+                    </div>
+                </div>
+
+                <div class="mitigation-pipeline-grid">
+                    <div class="pipeline-step-card">
+                        <div class="step-num-badge">01</div>
+                        <div class="step-icon-box">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        </div>
+                        <h4 data-i18n="pipe1Title">Mist Cannons & Sweeping</h4>
+                        <p data-i18n="pipe1Desc">Water mist guns and vacuum trucks clean road dust before it rises into the air.</p>
+                        <span class="step-action-tag" data-i18n="pipe1Tag">Dust Suppression</span>
+                    </div>
+
+                    <div class="pipeline-step-card">
+                        <div class="step-num-badge">02</div>
+                        <div class="step-icon-box">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                        </div>
+                        <h4 data-i18n="pipe2Title">100% EV City Buses</h4>
+                        <p data-i18n="pipe2Desc">Replacing diesel buses with electric models eliminates toxic street-level NO2 smoke.</p>
+                        <span class="step-action-tag" data-i18n="pipe2Tag">Zero Tailpipe</span>
+                    </div>
+
+                    <div class="pipeline-step-card">
+                        <div class="step-num-badge">03</div>
+                        <div class="step-icon-box">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l8-4v18M13 21V11l6-3v13"/></svg>
+                        </div>
+                        <h4 data-i18n="pipe3Title">Factory Smokestack Filters</h4>
+                        <p data-i18n="pipe3Desc">Industrial wet scrubbers and 24/7 sensor monitoring capture sulfur and toxic chemicals.</p>
+                        <span class="step-action-tag" data-i18n="pipe3Tag">Industrial Scrubbers</span>
+                    </div>
+
+                    <div class="pipeline-step-card">
+                        <div class="step-num-badge">04</div>
+                        <div class="step-icon-box">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22v-7"/><path d="M17 8a5 5 0 0 0-10 0c0 4 5 7 5 7s5-3 5-7z"/></svg>
+                        </div>
+                        <h4 data-i18n="pipe4Title">Green Tree Canopies</h4>
+                        <p data-i18n="pipe4Desc">Planting dense Neem and Peepal tree borders along roads naturally filters dust particles.</p>
+                        <span class="step-action-tag" data-i18n="pipe4Tag">Bio-Filter Shield</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. 5-Day Weather & Air Forecast Trend Chart -->
+            <div class="content-card large-card" style="margin-top: 18px;">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="forecastTitle">5-Day Weather & Air Trend Forecast</div>
+                        <div class="card-description" data-i18n="forecastChartDesc">Interactive multi-day curve of temperature, rain probability, and estimated air stability.</div>
+                    </div>
+                </div>
+                
+                <div class="chart-canvas-wrapper" style="height: 220px; margin-bottom: 16px;">
+                    <canvas id="weatherTrendChart"></canvas>
+                </div>
+
+                <div id="weatherForecast" class="forecast-grid"></div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             RESOURCE SAVING, CIRCULAR REUSE & INDUSTRIAL SYMBIOSIS
+        ================================================== -->
+        <section id="resourcesaving" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="resEyebrow">RESOURCE EFFICIENCY & CIRCULAR ECONOMY</div>
+                    <h2 data-i18n="resTitle">Save Resources. Reuse Materials. Eliminate Waste.</h2>
+                    <p data-i18n="resDesc">Practical circular workflows and dynamic calculators designed for everyday households as well as commercial enterprises and heavy industries.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="resourcesaving" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">CIRCULAR SAVINGS</div>
+                </div>
+            </div>
+
+            <!-- Audience Mode Switcher -->
+            <div class="resource-mode-bar">
+                <span class="mode-bar-label" data-i18n="selectViewMode">SELECT PERSPECTIVE:</span>
+                <div class="mode-pills">
+                    <button id="modeCitizenBtn" class="mode-pill active" onclick="setResourceMode('citizen')" data-i18n="modeCitizen">Citizen & Household</button>
+                    <button id="modeIndustryBtn" class="mode-pill" onclick="setResourceMode('industry')" data-i18n="modeIndustry">Commercial & Industrial</button>
+                </div>
+            </div>
+
+            <!-- =============================================
+                 1. CITIZEN & HOUSEHOLD VIEW
+            ============================================== -->
+            <div id="citizenResourceView" class="resource-view-panel">
+                
+                <!-- Circular Upcycling & Item Reuse Directory -->
+                <div class="content-card large-card card-theme-emerald">
+                    <div class="card-title" data-i18n="upcycleTitle">Circular Item Reuse & Upcycling Assistant</div>
+                    <p class="card-desc" data-i18n="upcycleDesc">Search any household item to discover step-by-step upcycling methods, zero-waste repurposing, and avoid buying new products.</p>
+
+                    <div class="upcycle-search-bar">
+                        <input id="upcycleSearchInput" type="text" placeholder="Search item (e.g. Old T-shirt, Glass Jar, Delivery Box, Tires, Coffee grounds...)" data-i18n-placeholder="upcycleSearchPlaceholder">
+                        <button id="voiceUpcycleBtn" type="button" class="voice-btn" title="Speak Item (Voice Input)" aria-label="Speak Item">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                        </button>
+                        <button class="primary-button" onclick="searchUpcycleDirectory()" data-i18n="btnSearchReuse">Find Reuse Plan</button>
+                    </div>
+
+                    <div class="upcycle-chips">
+                        <span class="chip-label" data-i18n="popularItems">POPULAR:</span>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Old Clothes & T-shirts')">Old Clothes</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Glass Jars & Bottles')">Glass Jars</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Delivery Cardboard Boxes')">Cardboard</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Used Tires & Rubber')">Used Tires</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Coffee Grounds & Tea Leaves')">Coffee Grounds</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Plastic Containers & Buckets')">Plastic Containers</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Scrap Pallet Wood')">Scrap Wood</button>
+                        <button class="upcycle-chip" onclick="quickSearchUpcycle('Old Cables & Chargers')">Old Cables</button>
+                    </div>
+
+                    <div id="upcycleResultContainer" class="upcycle-result-box">
+                        <div class="upcycle-header-row">
+                            <span id="upcycleItemName" class="upcycle-item-name">Old Clothes & Cotton T-shirts</span>
+                            <span id="upcycleDifficulty" class="upcycle-badge easy">DIY Difficulty: Easy</span>
+                        </div>
+                        <div class="upcycle-grid">
+                            <div class="upcycle-col">
+                                <strong data-i18n="upcycleHow">How to Reuse & Upcycle:</strong>
+                                <p id="upcycleHowText">Cut into reusable kitchen cleaning wipes, stitch into durable tote bags, or use cotton strips for plant ties and DIY braided rugs. Zero landfill disposal.</p>
+                            </div>
+                            <div class="upcycle-col">
+                                <strong data-i18n="upcycleImpact">Environmental & Financial Benefit:</strong>
+                                <p id="upcycleImpactText">Saves ~2,700 litres of water needed to grow new cotton per shirt. Saves ₹800–₹1,500/year on disposable paper towels and shopping bags.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Household Resource Conservation Calculator -->
+                <div class="content-card large-card card-theme-blue">
+                    <div class="card-title" data-i18n="hhCalcTitle">Household Resource & Water/Energy Savings Calculator</div>
+                    <p class="card-desc" data-i18n="hhCalcDesc">Calculate your family's annual rainwater harvesting yield, water conservation, electricity savings from phantom load elimination, and organic compost production.</p>
+
+                    <div class="calculator-inputs-grid">
+                        <div class="calc-input-group">
+                            <label for="hhMembers" data-i18n="hhMembersLabel">Household Members:</label>
+                            <input id="hhMembers" type="number" min="1" max="15" value="4" oninput="calculateHouseholdSavings()">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="hhRoofArea" data-i18n="hhRoofAreaLabel">Rooftop Catchment Area (sq ft):</label>
+                            <input id="hhRoofArea" type="number" min="100" max="10000" step="50" value="800" oninput="calculateHouseholdSavings()">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="hhAeratorToggle" data-i18n="hhAeratorLabel">Low-Flow Aerators & Eco Taps:</label>
+                            <select id="hhAeratorToggle" onchange="calculateHouseholdSavings()">
+                                <option value="yes" data-i18n="optYesInstalled">Installed (40% Water Saved)</option>
+                                <option value="no" data-i18n="optNoStandard">Standard High-Flow Taps</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="hhPhantomToggle" data-i18n="hhPhantomLabel">Vampire/Phantom Power Cutoff:</label>
+                            <select id="hhPhantomToggle" onchange="calculateHouseholdSavings()">
+                                <option value="yes" data-i18n="optYesSmartStrips">Yes (Smart Power Strips Used)</option>
+                                <option value="no" data-i18n="optNoStandby">No (Appliances on Standby)</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="hhCompostToggle" data-i18n="hhCompostLabel">Home Organic Waste Composting:</label>
+                            <select id="hhCompostToggle" onchange="calculateHouseholdSavings()">
+                                <option value="yes" data-i18n="optYesComposting">Yes (Home Aerobic/Pot Composting)</option>
+                                <option value="no" data-i18n="optNoTrash">No (Thrown in General Waste)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Calculator Results Output -->
+                    <div class="metric-grid" style="margin-top: 1.5rem;">
+                        <div class="metric-card card-accent-blue">
+                            <div class="metric-label" data-i18n="resRainYield">RAIN HARVESTING</div>
+                            <div id="hhRainYield" class="metric-value" style="color: #2980b9;">-- L/yr</div>
+                            <div class="metric-note" data-i18n="resRainNote">Filtered groundwater recharge</div>
+                        </div>
+
+                        <div class="metric-card card-accent-green">
+                            <div class="metric-label" data-i18n="resWaterSaved">WATER SAVED</div>
+                            <div id="hhWaterSaved" class="metric-value" style="color: #27ae60;">-- L/day</div>
+                            <div class="metric-note" data-i18n="resWaterNote">Via aeration & greywater reuse</div>
+                        </div>
+
+                        <div class="metric-card card-accent-gold">
+                            <div class="metric-label" data-i18n="resPowerSaved">ENERGY SAVED</div>
+                            <div id="hhPowerSaved" class="metric-value" style="color: #f39c12;">-- kWh/yr</div>
+                            <div class="metric-note" data-i18n="resPowerNote">Standby & lighting optimization</div>
+                        </div>
+
+                        <div class="metric-card card-accent-purple">
+                            <div class="metric-label" data-i18n="resCompostYield">ORGANIC COMPOST</div>
+                            <div id="hhCompostYield" class="metric-value" style="color: #8e44ad;">-- kg/yr</div>
+                            <div class="metric-note" data-i18n="resCompostNote">100% natural garden manure</div>
+                        </div>
+
+                        <div class="metric-card card-accent-emerald">
+                            <div class="metric-label" data-i18n="resCO2Saved">CARBON OFFSET</div>
+                            <div id="hhCO2Saved" class="metric-value" style="color: #16a085;">-- kg CO2/yr</div>
+                            <div class="metric-note" data-i18n="resCO2Note">Direct GHG emissions avoided</div>
+                        </div>
+
+                        <div class="metric-card card-accent-navy">
+                            <div class="metric-label" data-i18n="resMoneySaved">ANNUAL BILL SAVINGS</div>
+                            <div id="hhMoneySaved" class="metric-value" style="color: #2c3e50;">--</div>
+                            <div class="metric-note" data-i18n="resMoneyNote">Estimated utility savings</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Citizen Resource Conservation Best Practices -->
+                <div class="pillar-grid">
+                    <div class="pillar-card">
+                        <div class="pillar-number">01</div>
+                        <h3 data-i18n="hhPillar1Title">Solar Thermal Water Heating</h3>
+                        <p data-i18n="hhPillar1Desc">Replacing standard 2kW electric geysers with evacuated tube solar water heaters saves ~1,200 kWh/year and pays back within 24–30 months.</p>
+                    </div>
+
+                    <div class="pillar-card">
+                        <div class="pillar-number">02</div>
+                        <h3 data-i18n="hhPillar2Title">Subsurface Greywater Reuse</h3>
+                        <p data-i18n="hhPillar2Desc">Rerouting washing machine and RO discharge water to garden root-zones or toilet flushing cuts domestic freshwater demand by up to 35%.</p>
+                    </div>
+
+                    <div class="pillar-card">
+                        <div class="pillar-number">03</div>
+                        <h3 data-i18n="hhPillar3Title">Phantom Power & Smart Strips</h3>
+                        <p data-i18n="hhPillar3Desc">Standby electronics (microwaves, TVs, chargers) consume 8–10% of idle household power. Master switch surge strips completely stop phantom drain.</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- =============================================
+                 2. COMMERCIAL & INDUSTRIAL VIEW
+            ============================================== -->
+            <div id="industryResourceView" class="resource-view-panel" style="display: none;">
+                
+                <!-- Industrial Symbiosis & Byproduct Exchange -->
+                <div class="content-card large-card card-theme-amber">
+                    <div class="card-title" data-i18n="symbiosisTitle">Industrial Symbiosis & Byproduct Exchange Directory</div>
+                    <p class="card-desc" data-i18n="symbiosisDesc">Industrial symbiosis turns one industry's waste stream into another enterprise's valuable raw material, cutting disposal costs and raw material extraction.</p>
+
+                    <div class="industry-symbiosis-grid">
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">POWER & METALLURGY</div>
+                            <h4>Fly Ash & Granulated Blast Furnace Slag (GGBS)</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: Thermal Power & Steel Mills</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Green Cement & AAC Block Factories</span>
+                            </div>
+                            <p>Replaces clinker in Portland Pozzolana Cement (PPC), cutting CO2 emissions by 0.8 tons per ton of cement and saving landfill space.</p>
+                        </div>
+
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">FOOD & DISTILLERIES</div>
+                            <h4>Spent Grains & Molasses Spent Wash (Vinasse)</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: Breweries & Sugar Distilleries</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Cattle Feed Mills & Biogas CBG Plants</span>
+                            </div>
+                            <p>Spent grains provide 28% protein animal fodder; vinasse is biomethanated to produce Compressed Biogas (CBG) and organic potash fertilizer.</p>
+                        </div>
+
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">TEXTILE & APPAREL</div>
+                            <h4>Post-Industrial Yarn & Fabric Cuttings</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: Garment Mills & Weaving Units</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Automotive & Acoustic Insulation</span>
+                            </div>
+                            <p>Garnetted and shredded cotton/polyester fibers are thermal-bonded into high-performance soundproofing insulation panels for automotive and construction.</p>
+                        </div>
+
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">HEAVY MANUFACTURING</div>
+                            <h4>Flue Gas Waste Heat (300°C–650°C)</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: Kilns, Furnaces & Boilers</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Waste Heat Recovery (WHRS) / ORC</span>
+                            </div>
+                            <p>Captures exhaust gas heat to generate captive electricity via steam turbines or Organic Rankine Cycle (ORC), cutting factory power bills by 15–25%.</p>
+                        </div>
+
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">ENGINEERING & MACHINING</div>
+                            <h4>Metal Swarf & Cutting Fluid Sludge</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: CNC Machining & Auto Component Units</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Centrifugal Coolant Recovery & Foundries</span>
+                            </div>
+                            <p>Centrifugal extractors recover 90%+ cutting oil for reuse, while briquetted aluminum/steel chips are remelted with minimal oxidation loss.</p>
+                        </div>
+
+                        <div class="symbiosis-card">
+                            <div class="symbiosis-badge">CHEMICAL & EFFLUENT</div>
+                            <h4>ETP Chemical Sludge & Spent Foundry Sand</h4>
+                            <div class="symbiosis-flow">
+                                <span class="flow-source">Source: Central Effluent Plants & Foundries</span>
+                                <span class="flow-arrow">&rarr;</span>
+                                <span class="flow-dest">Target: Geopolymer Paver Tiles & Road Sub-base</span>
+                            </div>
+                            <p>Stabilized inorganic sludge and silica foundry sand replace virgin river sand in precast interlocking paver tiles and highway subgrade.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Industrial Resource Conservation & ESG Carbon Audit Calculator -->
+                <div class="content-card large-card card-theme-blue">
+                    <div class="card-title" data-i18n="indCalcTitle">Industrial Resource, Water (ZLD) & ESG Carbon Audit Calculator</div>
+                    <p class="card-desc" data-i18n="indCalcDesc">Evaluate plant water recycling (ZLD), captive renewable cogeneration, waste heat recovery savings, and Scope 1 & 2 greenhouse gas reduction.</p>
+
+                    <div class="calculator-inputs-grid">
+                        <div class="calc-input-group">
+                            <label for="indSectorSelect" data-i18n="indSectorLabel">Industry Sector:</label>
+                            <select id="indSectorSelect" onchange="calculateIndustrialResourceSavings()">
+                                <option value="textile" data-i18n="optSectorTextile">Textile & Dyeing Unit</option>
+                                <option value="chemical" data-i18n="optSectorChemical">Chemical & Pharmaceutical</option>
+                                <option value="food" data-i18n="optSectorFood">Food, Beverage & Brewery</option>
+                                <option value="engineering" data-i18n="optSectorEngineering">Auto & Heavy Engineering</option>
+                                <option value="metal" data-i18n="optSectorMetal">Foundry, Steel & Metallurgy</option>
+                                <option value="paper" data-i18n="optSectorPaper">Pulp, Paper & Packaging</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="indDailyWater" data-i18n="indWaterLabel">Daily Water Usage (kL / m³ per day):</label>
+                            <input id="indDailyWater" type="number" min="10" max="50000" step="50" value="300" oninput="calculateIndustrialResourceSavings()">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="indRecycleRate" data-i18n="indRecycleLabel">ETP / RO / ZLD Water Recovery Rate (%):</label>
+                            <input id="indRecycleRate" type="number" min="0" max="98" step="5" value="85" oninput="calculateIndustrialResourceSavings()">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="indMonthlyMWh" data-i18n="indPowerLabel">Monthly Grid Electricity (MWh/month):</label>
+                            <input id="indMonthlyMWh" type="number" min="5" max="50000" step="10" value="150" oninput="calculateIndustrialResourceSavings()">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="indWHRSToggle" data-i18n="indWHRSLabel">Waste Heat Recovery (WHRS) / ORC:</label>
+                            <select id="indWHRSToggle" onchange="calculateIndustrialResourceSavings()">
+                                <option value="yes" data-i18n="optWHRSYes">Implemented (18% Thermal Power Recovered)</option>
+                                <option value="no" data-i18n="optWHRSNo">None (Flue Gas Vented)</option>
+                            </select>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="indSolarKW" data-i18n="indSolarLabel">Captive Industrial Solar (kWp):</label>
+                            <input id="indSolarKW" type="number" min="0" max="10000" step="50" value="250" oninput="calculateIndustrialResourceSavings()">
+                        </div>
+                    </div>
+
+                    <!-- Industrial Calculator Metric Grid -->
+                    <div class="metric-grid" style="margin-top: 1.5rem;">
+                        <div class="metric-card card-accent-blue">
+                            <div class="metric-label" data-i18n="indWaterRecLabel">WATER RECOVERED</div>
+                            <div id="indWaterRecovered" class="metric-value" style="color: #2980b9;">-- kL/day</div>
+                            <div class="metric-note" data-i18n="indWaterRecNote">Circular process recycling</div>
+                        </div>
+
+                        <div class="metric-card card-accent-gold">
+                            <div class="metric-label" data-i18n="indCleanPowerLabel">CLEAN POWER GENERATED</div>
+                            <div id="indCleanPower" class="metric-value" style="color: #f39c12;">-- MWh/yr</div>
+                            <div class="metric-note" data-i18n="indCleanPowerNote">Solar + WHRS captive yield</div>
+                        </div>
+
+                        <div class="metric-card card-accent-green">
+                            <div class="metric-label" data-i18n="indCarbonScopeLabel">SCOPE 1 & 2 CO2 REDUCTION</div>
+                            <div id="indCarbonReduction" class="metric-value" style="color: #27ae60;">-- Tons/yr</div>
+                            <div class="metric-note" data-i18n="indCarbonScopeNote">Certified emissions avoided</div>
+                        </div>
+
+                        <div class="metric-card card-accent-navy">
+                            <div class="metric-label" data-i18n="indFinancialLabel">ANNUAL RESOURCE SAVINGS</div>
+                            <div id="indFinancialSavings" class="metric-value" style="color: #2c3e50;">--</div>
+                            <div class="metric-note" data-i18n="indFinancialNote">Water, fuel & power offset</div>
+                        </div>
+
+                        <div class="metric-card card-accent-purple">
+                            <div class="metric-label" data-i18n="indISOLabel">CIRCULAR READINESS</div>
+                            <div id="indISOScore" class="metric-value" style="color: #8e44ad;">-- / 100</div>
+                            <div class="metric-note" data-i18n="indISONote">ISO 50001 & ZWTL benchmark</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Industrial Best Practice Columns -->
+                <div class="pillar-grid">
+                    <div class="pillar-card">
+                        <div class="pillar-number">01</div>
+                        <h3 data-i18n="indPillar1Title">Zero Liquid Discharge (ZLD)</h3>
+                        <p data-i18n="indPillar1Desc">Combining high-recovery Reverse Osmosis with Mechanical Vapor Recompression (MVR) evaporators recycles 95%+ of industrial wastewater for boiler and cooling tower feed.</p>
+                    </div>
+
+                    <div class="pillar-card">
+                        <div class="pillar-number">02</div>
+                        <h3 data-i18n="indPillar2Title">Specific Energy Consumption (SEC)</h3>
+                        <p data-i18n="indPillar2Desc">Deploying IE4 super-premium efficiency motors, variable frequency drives (VFDs) on pumps/blowers, and IoT energy sub-metering cuts factory electricity by 12–20%.</p>
+                    </div>
+
+                    <div class="pillar-card">
+                        <div class="pillar-number">03</div>
+                        <h3 data-i18n="indPillar3Title">Zero Waste to Landfill (ZWTL)</h3>
+                        <p data-i18n="indPillar3Desc">Co-processing non-recyclable high-calorific hazardous wastes in cement kilns as Refuse Derived Fuel (RDF) achieves true 100% landfill diversion certification.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- =================================================
+             CARBON FOOTPRINT CALCULATOR SECTION
+        ================================================== -->
+        <section id="carbonfootprint" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="cfEyebrow">CLIMATE IMPACT & EMISSIONS TRACKER</div>
+                    <h2 data-i18n="cfTitle">Calculate & Cut Your Carbon Footprint</h2>
+                    <p data-i18n="cfDesc">Measure your annual greenhouse gas footprint across transport, home energy, food, and waste, and discover high-impact reduction steps.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="carbonfootprint" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">IPCC EMISSIONS MODEL</div>
+                </div>
+            </div>
+
+            <!-- Carbon Calculator Card -->
+            <div class="content-card large-card card-theme-emerald">
+                <div class="card-title" data-i18n="cfCalcTitle">Comprehensive Personal & Household Carbon Calculator</div>
+                <p class="card-desc" data-i18n="cfCalcDesc">Real-time emissions modeling based on IPCC emission factors and regional energy grid carbon intensity.</p>
+
+                <div class="calculator-inputs-grid">
+                    <div class="calc-input-group">
+                        <label for="cfCommuteKm" data-i18n="cfCommuteLabel">Daily Commute Distance (km):</label>
+                        <input id="cfCommuteKm" type="number" min="0" max="300" value="20" oninput="calculateCarbonFootprint()">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfTransportMode" data-i18n="cfTransportModeLabel">Primary Travel Mode:</label>
+                        <select id="cfTransportMode" onchange="calculateCarbonFootprint()">
+                            <option value="petrol_car" data-i18n="optCFPetrolCar">Petrol Car (Medium/Sedan)</option>
+                            <option value="diesel_car" data-i18n="optCFDieselCar">Diesel SUV / Car</option>
+                            <option value="bike" data-i18n="optCFBike">Motorcycle / Scooter</option>
+                            <option value="ev" data-i18n="optCFEV">Electric Vehicle (EV)</option>
+                            <option value="public_transit" data-i18n="optCFPublic">Metro Train / Electric Bus</option>
+                            <option value="bicycle" data-i18n="optCFBicycle">Bicycle / Walking (Zero-Emission)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfPowerUnits" data-i18n="cfPowerLabel">Monthly Grid Electricity (kWh / Units):</label>
+                        <input id="cfPowerUnits" type="number" min="0" max="5000" step="25" value="250" oninput="calculateCarbonFootprint()">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfCookingGas" data-i18n="cfGasLabel">Monthly LPG Cylinders (14.2kg):</label>
+                        <input id="cfCookingGas" type="number" min="0" max="10" step="0.5" value="1" oninput="calculateCarbonFootprint()">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfDiet" data-i18n="cfDietLabel">Diet & Food Habits:</label>
+                        <select id="cfDiet" onchange="calculateCarbonFootprint()">
+                            <option value="vegan" data-i18n="optCFVegan">Plant-Based / Vegan (Lowest Footprint)</option>
+                            <option value="vegetarian" data-i18n="optCFVegetarian" selected>Vegetarian (Dairy, Grains, Produce)</option>
+                            <option value="mixed" data-i18n="optCFMixed">Balanced Mixed (Occasional Poultry/Fish)</option>
+                            <option value="high_meat" data-i18n="optCFHighMeat">High Meat / Heavy Poultry & Mutton</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfWasteHabit" data-i18n="cfWasteLabel">Household Waste Segregation:</label>
+                        <select id="cfWasteHabit" onchange="calculateCarbonFootprint()">
+                            <option value="zero_waste" data-i18n="optCFZeroWaste">100% Segregated & Home Composted</option>
+                            <option value="moderate" data-i18n="optCFModerate" selected>Moderate (Recycle Bottles/Paper Only)</option>
+                            <option value="none" data-i18n="optCFNone">None (All Waste Sent to Landfill)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label for="cfFlights" data-i18n="cfFlightsLabel">Annual Flight Hours (Domestic/Intl):</label>
+                        <input id="cfFlights" type="number" min="0" max="100" value="2" oninput="calculateCarbonFootprint()">
+                    </div>
+                </div>
+
+                <!-- Carbon Footprint Metric Outputs -->
+                <div class="metric-grid" style="margin-top: 1.5rem;">
+                    <div class="metric-card card-accent-coral">
+                        <div class="metric-label" data-i18n="cfTotalLabel">YOUR ANNUAL FOOTPRINT</div>
+                        <div id="cfTotalTons" class="metric-value" style="color: #ad555b;">-- Tons CO2</div>
+                        <div class="metric-note" data-i18n="cfTotalNote">Gross annual greenhouse emissions</div>
+                    </div>
+
+                    <div class="metric-card card-accent-green">
+                        <div class="metric-label" data-i18n="cfStatusLabel">BENCHMARK RATING</div>
+                        <div id="cfBenchmarkRating" class="metric-value" style="color: #27ae60; font-size: 15px;">--</div>
+                        <div class="metric-note" data-i18n="cfBenchmarkNote">India: ~1.9T | Global: ~4.7T</div>
+                    </div>
+
+                    <div class="metric-card card-accent-emerald">
+                        <div class="metric-label" data-i18n="cfTreesLabel">TREES TO OFFSET</div>
+                        <div id="cfTreesCount" class="metric-value" style="color: #2f845c;">-- Trees</div>
+                        <div class="metric-note" data-i18n="cfTreesNote">Mature trees absorbing for 1 yr</div>
+                    </div>
+
+                    <div class="metric-card card-accent-blue">
+                        <div class="metric-label" data-i18n="cfPotentialLabel">MAX REDUCTION POTENTIAL</div>
+                        <div id="cfReductionPotential" class="metric-value" style="color: #2980b9;">-- %</div>
+                        <div class="metric-note" data-i18n="cfPotentialNote">Achievable with eco-habits</div>
+                    </div>
+                </div>
+
+                <!-- Tailored Carbon Reduction Action Plan -->
+                <div id="cfActionPlanBox" class="upcycle-result-box" style="margin-top: 1.25rem;">
+                    <strong style="font-size: 12px; color: var(--navy); display: block; margin-bottom: 6px;" data-i18n="cfPlanTitle">Your Top 3 High-Impact Steps to Cut Carbon by 40–60%:</strong>
+                    <ul id="cfActionList" style="margin: 0; padding-left: 20px; font-size: 11.5px; line-height: 1.6; color: var(--text-medium);">
+                        <li>Switch daily private commute to Metro/Public Transit (-1.1 Tons CO2/year).</li>
+                        <li>Install 1kW Rooftop Solar & smart power strip (-0.9 Tons CO2/year).</li>
+                        <li>Home compost organic kitchen scraps to prevent dumpsite methane (-0.3 Tons CO2/year).</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             10. WHAT-IF URBAN POLICY & CLIMATE SIMULATION SANDBOX
+        ================================================== -->
+        <section id="simulation" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="simEyebrow">POLICY & CLIMATE SIMULATOR</div>
+                    <h2 data-i18n="simTitle">"What-If" Urban Policy & Climate Sandbox</h2>
+                    <p data-i18n="simDesc">Model the real-world impact of clean energy mandates, EV fleet transition, and zero-waste policies grounded in live city baseline data.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="simulation" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live" data-i18n="simBadge">INTERACTIVE PHYSICS MODEL</div>
+                </div>
+            </div>
+
+            <!-- Simulation Controls & Baseline Card -->
+            <div class="content-card large-card card-theme-emerald">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title" data-i18n="simControlsTitle">Simulate Municipal Interventions</div>
+                        <div class="card-description" data-i18n="simControlsDesc">Adjust the policy levers below to project environmental offsets, AQI drop, and municipal budget savings for <span id="simCityName" style="color: var(--green); font-weight: 700;">this city</span>.</div>
+                    </div>
+                    <button id="resetSimBtn" class="secondary-button" style="padding: 6px 12px; font-size: 12px;" data-i18n="btnResetSim">Reset to Baseline</button>
+                </div>
+
+                <div class="sim-sliders-grid">
+                    <!-- Lever 1: Solar Mandate -->
+                    <div class="sim-lever-card">
+                        <div class="lever-header">
+                            <span class="lever-label" data-i18n="lever1Title">☀️ Solar Mandate Expansion (+MW)</span>
+                            <span id="valSolarLever" class="lever-val-badge">+50 MW</span>
+                        </div>
+                        <input id="sliderSolar" type="range" min="0" max="300" step="5" value="50" class="sim-slider">
+                        <div class="slider-ticks">
+                            <span>0 MW</span>
+                            <span>+150 MW</span>
+                            <span>+300 MW</span>
+                        </div>
+                        <p class="lever-note" data-i18n="lever1Note">Mandatory rooftop solar on all commercial and institutional terraces.</p>
+                    </div>
+
+                    <!-- Lever 2: EV Fleet Transition -->
+                    <div class="sim-lever-card">
+                        <div class="lever-header">
+                            <span class="lever-label" data-i18n="lever2Title">⚡ Municipal & Bus Fleet EV Transition (%)</span>
+                            <span id="valEVLever" class="lever-val-badge">30%</span>
+                        </div>
+                        <input id="sliderEV" type="range" min="0" max="100" step="5" value="30" class="sim-slider">
+                        <div class="slider-ticks">
+                            <span>0% (Current)</span>
+                            <span>50%</span>
+                            <span>100% (Zero-Emission)</span>
+                        </div>
+                        <p class="lever-note" data-i18n="lever2Note">Replacing diesel municipal tippers, buses, and autorickshaws with electric powertrains.</p>
+                    </div>
+
+                    <!-- Lever 3: Source Waste Segregation -->
+                    <div class="sim-lever-card">
+                        <div class="lever-header">
+                            <span class="lever-label" data-i18n="lever3Title">♻️ Source Segregation & Biomethanation (%)</span>
+                            <span id="valSegLever" class="lever-val-badge">75%</span>
+                        </div>
+                        <input id="sliderSeg" type="range" min="20" max="100" step="5" value="75" class="sim-slider">
+                        <div class="slider-ticks">
+                            <span>20% (Baseline)</span>
+                            <span>60%</span>
+                            <span>100% (Zero-Landfill)</span>
+                        </div>
+                        <p class="lever-note" data-i18n="lever3Note">Enforced 2-bin-1-bag doorstep segregation diverting organics from open dumps.</p>
+                    </div>
+
+                    <!-- Lever 4: Tree Canopy & Green Buffers -->
+                    <div class="sim-lever-card">
+                        <div class="lever-header">
+                            <span class="lever-label" data-i18n="lever4Title">🌳 Urban Tree Canopy & Roadside Buffers (+%)</span>
+                            <span id="valTreeLever" class="lever-val-badge">+10%</span>
+                        </div>
+                        <input id="sliderTree" type="range" min="0" max="40" step="2" value="10" class="sim-slider">
+                        <div class="slider-ticks">
+                            <span>0%</span>
+                            <span>+20%</span>
+                            <span>+40% Dense Canopy</span>
+                        </div>
+                        <p class="lever-note" data-i18n="lever4Note">Native Peepal & Neem bio-shields along arterial roads to absorb particulate dust.</p>
+                    </div>
+                </div>
+
+                <!-- Simulation Output Impact Metric Cards -->
+                <div class="metric-grid" style="margin-top: 1.75rem;">
+                    <div class="metric-card card-accent-green">
+                        <div class="metric-label" data-i18n="simCO2Saved">PROJECTED CO₂ OFFSET</div>
+                        <div id="simCO2Val" class="metric-value" style="color: #27ae60;">-- Tons/yr</div>
+                        <div class="metric-note" data-i18n="simCO2Note">Clean power + zero tailpipes</div>
+                    </div>
+
+                    <div class="metric-card card-accent-blue">
+                        <div class="metric-label" data-i18n="simAQIImprove">PROJECTED AQI IMPROVEMENT</div>
+                        <div id="simAQIVal" class="metric-value" style="color: #2980b9;">--</div>
+                        <div id="simAQINote" class="metric-note">-- points drop</div>
+                    </div>
+
+                    <div class="metric-card card-accent-purple">
+                        <div class="metric-label" data-i18n="simLandfillDivert">LANDFILL DIVERSION</div>
+                        <div id="simLandfillVal" class="metric-value" style="color: #8e44ad;">-- Tons/day</div>
+                        <div class="metric-note" data-i18n="simLandfillNote">Dumpsite fires prevented</div>
+                    </div>
+
+                    <div class="metric-card card-accent-gold">
+                        <div class="metric-label" data-i18n="simFinSavings">MUNICIPAL ANNUAL SAVINGS</div>
+                        <div id="simFinVal" class="metric-value" style="color: #f39c12;">₹ -- Lakhs</div>
+                        <div class="metric-note" data-i18n="simFinNote">Fuel, grid & tipping fees</div>
+                    </div>
+                </div>
+
+                <!-- Chart.js Simulation Projection Comparison -->
+                <div style="margin-top: 24px;">
+                    <div class="chart-box-header">
+                        <strong data-i18n="simChartTitle">Environmental Impact Projection (Baseline vs. Simulated Policy)</strong>
+                    </div>
+                    <div class="chart-canvas-wrapper" style="height: 230px;">
+                        <canvas id="simulationChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             11. MULTIMODAL CITIZEN WASTE & CIVIC HAZARD SCANNER
+        ================================================== -->
+        <section id="civicscanner" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="scanEyebrow">AI COMPUTER VISION</div>
+                    <h2 data-i18n="scanTitle">Multimodal Citizen Waste & Civic Hazard Scanner</h2>
+                    <p data-i18n="scanDesc">Upload or capture photos of household waste, road damage, or overflow points. Get instant material classification and log verified reports on the city map.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="civicscanner" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live" data-i18n="scanBadge">GEMINI VISION AI</div>
+                </div>
+            </div>
+
+            <div class="two-column-cards">
+                <!-- Left: Upload / Camera Dropzone -->
+                <div class="content-card large-card card-theme-blue">
+                    <div class="card-title" data-i18n="scanDropzoneTitle">Upload or Snap Photo</div>
+                    <p class="card-desc" data-i18n="scanDropzoneDesc">Select an image from your device or camera to analyze waste composition or report civic defects.</p>
+
+                    <!-- Compact Dropzone -->
+                    <div id="dropZone" class="scanner-dropzone">
+                        <div class="dropzone-compact-inner">
+                            <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                            <div>
+                                <strong class="dropzone-prompt-text" data-i18n="dropzonePrompt">Drop photo or tap to browse</strong>
+                                <span class="dropzone-hint-text" data-i18n="dropzoneFormats">JPG, PNG, WEBP (Camera capture supported)</span>
+                            </div>
+                        </div>
+                        <input id="cameraFileInput" type="file" accept="image/*" style="display: none;">
+                        <button id="browseFileBtn" class="primary-button btn-compact-browse" data-i18n="btnSelectPhoto">Choose File</button>
+                    </div>
+
+                    <!-- Image Preview (Compact) -->
+                    <div id="imagePreviewContainer" class="image-preview-box" style="display: none;">
+                        <img id="imagePreview" alt="Upload Preview">
+                        <div class="preview-actions-row">
+                            <button id="analyzeImageBtn" class="primary-button btn-analyze-now" data-i18n="btnAnalyzeAI">Analyze with Vision AI</button>
+                            <button id="clearImageBtn" class="secondary-button btn-clear-photo" data-i18n="btnClearPhoto">Clear</button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Sample Photos -->
+                    <div class="quick-sample-photos" style="margin-top: 14px;">
+                        <span class="quick-label" data-i18n="samplePhotos">Quick Test Samples:</span>
+                        <div class="samples-chips-wrap">
+                            <button class="city-chip sample-photo-chip" data-sample="plastic_bottle">🧴 Plastic Bottle</button>
+                            <button class="city-chip sample-photo-chip" data-sample="battery">🔋 Battery</button>
+                            <button class="city-chip sample-photo-chip" data-sample="organic">🥬 Organics</button>
+                            <button class="city-chip sample-photo-chip" data-sample="cardboard">📦 Cardboard</button>
+                            <button class="city-chip sample-photo-chip" data-sample="glass">🍾 Glass</button>
+                            <button class="city-chip sample-photo-chip" data-sample="can">🥫 Metal Can</button>
+                            <button class="city-chip sample-photo-chip" data-sample="pothole">🕳️ Pothole</button>
+                            <button class="city-chip sample-photo-chip" data-sample="drain">🌊 Drain Clog</button>
+                            <button class="city-chip sample-photo-chip" data-sample="medical">🩹 Mask/Medical</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: AI Classification Results Card -->
+                <div class="content-card large-card card-theme-emerald">
+                    <div class="card-title" data-i18n="scanResultTitle">AI Diagnostic & Actionable Guidance</div>
+                    <p class="card-desc" data-i18n="scanResultDesc">Instant material classification, hazard index, and municipal action routing.</p>
+
+                    <div id="scannerResultBox" class="scanner-result-panel">
+                        <div class="scanner-empty-state">
+                            <div style="font-size: 36px; margin-bottom: 8px;">📷</div>
+                            <strong data-i18n="scannerAwaiting">Awaiting Photo Input</strong>
+                            <p data-i18n="scannerAwaitingDesc">Select or capture a photo on the left to see instant segregation advice and earn Green Civic Points.</p>
+                        </div>
+                    </div>
+
+                    <!-- Citizen Green Score & Pin to Map Bar -->
+                    <div id="scannerActionFooter" class="scanner-action-footer" style="display: none; margin-top: 16px;">
+                        <div class="reward-points-badge">
+                            <span style="font-size: 16px;">⭐</span>
+                            <span>+<strong id="rewardPointsVal">25</strong> Green Points Earned!</span>
+                        </div>
+                        <button id="pinHazardToMapBtn" class="primary-button" style="background: #2563eb;" data-i18n="btnPinMap">
+                            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            <span>Geotag & Pin on Map</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             12. AI ASSISTANT SECTION
+        ================================================== -->
+        <section id="assistant" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="aiEyebrow">ECOCITY AI ASSISTANT</div>
+                    <h2 data-i18n="aiTitle">Ask your city a question.</h2>
+                    <p data-i18n="aiDesc">Ask about live weather, air quality, waste optimization, EV charging hubs, or solar potential.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="assistant" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">AI COPILOT</div>
+                </div>
+            </div>
+
+            <div class="assistant-card">
+                <div class="assistant-card-topbar">
+                    <div class="assistant-status-pill">
+                        <span class="pulse-dot"></span>
+                        <span data-i18n="aiActiveStatus">Live AI Intelligence</span>
+                    </div>
+                    <button id="clearChatBtn" class="clear-chat-btn" title="Clear chat history and start a new conversation" data-i18n="btnClearChat">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                        <span data-i18n="btnClearChatText">New Chat</span>
+                    </button>
+                </div>
+
+                <div id="chatMessages" class="chat-messages">
+                    <div class="chat-message ai-message">
+                        <div class="message-label-row">
+                            <div class="message-label">ECOCITY AI</div>
+                            <button class="chat-tts-btn" title="Read Aloud" aria-label="Read Aloud">
+                                <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                            </button>
+                        </div>
+                        <p data-i18n="aiWelcome">Hello! I am connected to real-time city data. Ask me any question about the current location's weather, air pollution (AQI), waste management, EV charging points, or solar energy potential.</p>
+                    </div>
+                </div>
+
+                <div class="assistant-input-row">
+                    <input id="assistantInput" type="text" placeholder="Example: How could today's weather affect waste management?" data-i18n-placeholder="aiInputPlaceholder">
+                    <button id="voiceAssistantBtn" type="button" class="voice-btn" title="Speak to EcoCity AI (Voice Input)" aria-label="Voice Input">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                    </button>
+                    <button id="assistantSendBtn" class="primary-button" data-i18n="btnAskAI">Ask EcoCity AI</button>
+                </div>
+            </div>
+
+            <div class="suggested-questions">
+                <span class="suggested-label" data-i18n="tryAsking">TRY ASKING</span>
+                <button class="suggestion" data-i18n="sug1">What is the weather and air quality here?</button>
+                <button class="suggestion" data-i18n="sug2">How many EV chargers are available?</button>
+                <button class="suggestion" data-i18n="sug3">What are the smart-city opportunities?</button>
+                <button class="suggestion" data-i18n="sug4">How might rain affect waste management?</button>
+            </div>
+        </section>
+
+        <!-- =================================================
+             SOURCES & METHOD SECTION
+        ================================================== -->
+        <section id="sources" class="page-section">
+            <div class="section-header">
+                <div>
+                    <div class="eyebrow" data-i18n="srcEyebrow">TRANSPARENCY & DATA SOURCES</div>
+                    <h2 data-i18n="srcTitle">Know where the answers come from.</h2>
+                    <p data-i18n="srcDesc">Trust and real-world verifiability are built directly into the system architecture.</p>
+                </div>
+                <div class="section-header-actions">
+                    <button class="section-voice-btn" data-section-name="sources" onclick="readCurrentSectionVoice(this)" title="Listen to Voice Guide in English / हिन्दी" aria-label="Listen to Audio Guide">
+                        <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+                        <span data-i18n="btnVoiceGuide">Voice Guide</span>
+                    </button>
+                    <div class="data-badge live">OPEN DATA ARCHITECTURE</div>
+                </div>
+            </div>
+
+            <div class="source-grid">
+                <div class="content-card card-accent-blue">
+                    <div class="source-number">01</div>
+                    <h3 data-i18n="src1Title">Location & Geocoding</h3>
+                    <p data-i18n="src1Desc">Dual-engine geocoding powered by Open-Meteo and OpenStreetMap Nominatim for global accuracy.</p>
+                    <span class="data-badge live">LIVE API</span>
+                </div>
+
+                <div class="content-card card-accent-gold">
+                    <div class="source-number">02</div>
+                    <h3 data-i18n="src2Title">Weather & Solar Radiation</h3>
+                    <p data-i18n="src2Desc">Open-Meteo High-Resolution Forecast & Solar Radiation APIs provide current and 5-day predictive atmospheric models.</p>
+                    <span class="data-badge live">LIVE API</span>
+                </div>
+
+                <div class="content-card card-accent-coral">
+                    <div class="source-number">03</div>
+                    <h3 data-i18n="src3Title">Air Quality & Pollution</h3>
+                    <p data-i18n="src3Desc">Real-time PM2.5, PM10, NO2, CO, and US/European AQI data from Open-Meteo Air Quality atmospheric models.</p>
+                    <span class="data-badge live">LIVE API</span>
+                </div>
+
+                <div class="content-card card-accent-emerald">
+                    <div class="source-number">04</div>
+                    <h3 data-i18n="src4Title">Municipal & OSM Infrastructure</h3>
+                    <p data-i18n="src4Desc">Live Overpass queries extract EV chargers, recycling centres, and public transport stops directly from OpenStreetMap.</p>
+                    <span class="data-badge live">LIVE OSM</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================
+             SITE FOOTER (Executive Modern Smart City Platform Footer)
+        ================================================== -->
+        <footer class="site-footer">
+            <div class="footer-top-grid">
+                <!-- Column 1: Brand & Mission -->
+                <div class="footer-col footer-col-brand">
+                    <div class="footer-brand-header">
+                        <div class="footer-brand-mark">
+                            <svg class="footer-brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        </div>
+                        <div>
+                            <span class="footer-brand-name">ECOCITY AI™</span>
+                            <div class="footer-brand-badge" data-i18n="footerBadge">Zero Hallucination • Real Data First</div>
+                        </div>
+                    </div>
+                    <p class="footer-mission-text" data-i18n="footerMission">
+                        Autonomous smart city intelligence platform transforming real-time atmospheric, GIS, and municipal telemetry into hyper-local climate and sustainability actions.
+                    </p>
+                    <div class="footer-status-pill">
+                        <span class="pulse-dot"></span>
+                        <span data-i18n="footerLiveStatus">Live Telemetry Feeds Active (Open-Meteo & OSM)</span>
+                    </div>
+                </div>
+
+                <!-- Column 2: Intelligence Modules -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title" data-i18n="footerColModules">Intelligence Modules</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="javascript:void(0)" onclick="showSection('dashboard')"><span class="footer-link-dot">›</span> <span data-i18n="navDashboard">Dashboard</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('waste')"><span class="footer-link-dot">›</span> <span data-i18n="navWaste">Waste Intelligence</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('recycling')"><span class="footer-link-dot">›</span> <span data-i18n="navRecycling">Recycling & Materials</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('resourcesaving')"><span class="footer-link-dot">›</span> <span data-i18n="navResourceSaving">Resource Saving & Reuse</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('carbonfootprint')"><span class="footer-link-dot">›</span> <span data-i18n="navCarbonFootprint">Carbon Footprint</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('simulation')"><span class="footer-link-dot">›</span> <span data-i18n="navSimulation">Urban Sandbox</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('civicscanner')"><span class="footer-link-dot">›</span> <span data-i18n="navCivicScanner">AI Hazard Scanner</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 3: Data Feeds & Standards -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title" data-i18n="footerColData">Verified Telemetry</h4>
+                    <ul class="footer-nav-links">
+                        <li><a href="javascript:void(0)" onclick="showSection('energy')"><span class="footer-link-dot">›</span> <span data-i18n="navEnergy">Solar Radiation Feeds</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('weather')"><span class="footer-link-dot">›</span> <span data-i18n="navWeather">Open-Meteo High-Res AQI</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('ev')"><span class="footer-link-dot">›</span> <span data-i18n="navEV">OpenStreetMap Overpass GIS</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('transport')"><span class="footer-link-dot">›</span> <span data-i18n="navTransport">Public Clean Transit</span></a></li>
+                        <li><a href="javascript:void(0)" onclick="showSection('sources')"><span class="footer-link-dot">›</span> <span data-i18n="navSources">Transparency & Methodology</span></a></li>
+                    </ul>
+                </div>
+
+                <!-- Column 4: Accessibility & Voice -->
+                <div class="footer-col">
+                    <h4 class="footer-col-title" data-i18n="footerColGov">Accessibility & Voice</h4>
+                    <p class="footer-sub-text" data-i18n="footerVoiceNote">
+                        Full dual-language text-to-speech audio guides available across all diagnostic modules in both English and हिन्दी.
+                    </p>
+                    <div class="footer-feature-badges">
+                        <span class="footer-feat-badge">🔊 Hindi/English Audio</span>
+                        <span class="footer-feat-badge">🌿 ISO 37120 Smart City</span>
+                        <span class="footer-feat-badge">⚡ Sub-15ms Latency</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Bottom Bar -->
+            <div class="footer-bottom-bar">
+                <div class="footer-copyright">
+                    © 2026 <strong>EcoCity AI Platform</strong> • <span data-i18n="footerCopyText">Municipal Environmental Intelligence & Decision System</span>
+                </div>
+                <div class="footer-bottom-pills">
+                    <span class="footer-bottom-tag">Deterministic Physics</span>
+                    <span class="footer-bottom-tag">Deterministic Math</span>
+                    <span class="footer-bottom-tag">Open Telemetry</span>
+                </div>
+            </div>
+        </footer>
+
+    </main>
+</div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<!-- App JS -->
+<script src="app.js"></script>
+
+</body>
+</html>
