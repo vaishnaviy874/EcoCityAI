@@ -5,7 +5,7 @@
    Solar Degradation Calculator + EV Smart Nudges + Smart City Roadmap
 ========================================================= */
 
-const API_BASE = "http://127.0.0.1:5000";
+const API_BASE = "https://ecocityai.onrender.com";
 
 let currentData = null;
 let currentLanguage = "en";
